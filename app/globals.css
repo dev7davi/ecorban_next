@@ -1,26 +1,184 @@
 @import "tailwindcss";
 
+/* Modo escuro por classe, como no sistema (darkMode: 'class') */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens — fonte da verdade: lib/tokens.ts (extraídos do sistema eCorban) */
+@theme {
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-50: #f0f4fe;
+  --color-brand-100: #dee6fc;
+  --color-brand-200: #bfcef8;
+  --color-brand-300: #94acf0;
+  --color-brand-400: #6184e5;
+  --color-brand-500: #3c67dd;
+  --color-brand-600: #2751c5;
+  --color-brand-700: #1f42a3;
+  --color-brand-800: #193685;
+  --color-brand-900: #162c69;
+  --color-brand-950: #0f1c3d;
+
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f9fafb;
+  --color-neutral-100: #f3f4f6;
+  --color-neutral-200: #e5e7eb;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #6b7280;
+  --color-neutral-600: #4b5563;
+  --color-neutral-700: #374151;
+  --color-neutral-800: #1f2937;
+  --color-neutral-900: #111827;
+  --color-neutral-950: #030712;
+
+  --color-success: #16a34a;
+  --color-error: #dc2626;
+  --color-warning: #f59e0b;
+  --color-info: #0ea5e9;
+
+  --color-pipe-simulado: #fb923c;
+  --color-pipe-digitada: #f97316;
+  --color-pipe-analise: #ea580c;
+  --color-pipe-pendencia: #ef4444;
+  --color-pipe-averbado: #22c55e;
+  --color-pipe-pago: #16a34a;
+  --color-pipe-cancelado: #9ca3af;
+
+  --color-chrome: #111827;
+
+  /* Cores semânticas que trocam com o tema */
+  --color-page: var(--page);
+  --color-page-alt: var(--page-alt);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-body: var(--body);
+  --color-strong: var(--strong);
+  --color-muted: var(--muted);
+  --color-link: var(--link);
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-2xl: 16px;
+
+  --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-bounce: cubic-bezier(0.2, 0.9, 0.3, 1.2);
+
+  --animate-floaty: floaty 5s ease-in-out infinite;
+  --animate-floaty-slow: floaty 6s ease-in-out -2s infinite;
+  --animate-marquee: marquee 45s linear infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes floaty {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --page: #ffffff;
+  --page-alt: #f9fafb;
+  --surface: #ffffff;
+  --line: #d1d5db;
+  --body: #374151;
+  --strong: #111827;
+  --muted: #6b7280;
+  --link: #2751c5;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --page: #111827;
+  --page-alt: #0f1623;
+  --surface: #1f2937;
+  --line: #374151;
+  --body: #d1d5db;
+  --strong: #f3f4f6;
+  --muted: #9ca3af;
+  --link: #94acf0;
+  color-scheme: dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+/* Barra de rolagem fina, na paleta da marca. As cores trocam com o tema (claro/escuro). */
+:root {
+  --sb-thumb: var(--color-brand-600);
+  --sb-thumb-hover: var(--color-brand-700);
+  --sb-track: transparent;
+}
+.dark {
+  --sb-thumb: var(--color-brand-400);
+  --sb-thumb-hover: var(--color-brand-300);
+  --sb-track: transparent;
+}
+
+/* Chrome, Edge e Safari: 4px, a mais fina que ainda dá para agarrar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--sb-track);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sb-thumb-hover);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox (e navegadores sem ::-webkit-scrollbar): o mais fino que o padrão permite */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--sb-thumb) var(--sb-track);
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--page);
+  color: var(--body);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
+/* Até o GSAP assumir, o herói fica oculto para não "piscar" (ver motionScript em app/layout.tsx). */
+.motion-pending :is([data-hero-badge], [data-hero-word], [data-hero-sub], [data-hero-form], [data-hero-float], [data-hero-panel]) {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
