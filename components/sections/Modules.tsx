@@ -16,14 +16,14 @@ export function Modules() {
   const m = modules[active];
 
   return (
-    <section id="solucoes" className="px-4 py-16 sm:py-24 sm:px-8">
+    <section id="solucoes" className="px-[19px] py-16 sm:py-24 sm:px-8">
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <SectionTitle title="Tudo o que a sua operação de crédito precisa, em um só sistema" />
         </Reveal>
 
         {/* Abas dos 9 módulos */}
-        <div role="tablist" aria-label="Módulos do eCorban" className="-mx-4 mt-10 flex snap-x gap-3 overflow-x-auto px-4 pb-3 [scrollbar-width:none] sm:mt-12 lg:mx-0 lg:grid lg:grid-cols-9 lg:overflow-visible lg:px-0">
+        <div role="tablist" aria-label="Módulos do eCorban" className="-mx-[19px] mt-10 flex snap-x gap-3 overflow-x-auto px-[19px] pb-3 [scrollbar-width:none] sm:mt-12 lg:mx-0 lg:grid lg:grid-cols-9 lg:overflow-visible lg:px-0">
           {modules.map((mod, i) => {
             const on = i === active;
             const Icon = mod.icon;

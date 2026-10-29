@@ -11,7 +11,7 @@ export function Faq() {
   const [open, setOpen] = useState(0);
 
   return (
-    <section id="faq" className="px-4 py-16 sm:py-24 sm:px-8">
+    <section id="faq" className="px-[19px] py-16 sm:py-24 sm:px-8">
       <div className="mx-auto grid max-w-6xl items-start gap-12 lg:grid-cols-[4fr_7fr]">
         <Reveal>
           <h2 data-split className="text-[clamp(30px,4vw,40px)] leading-[1.15] font-semibold tracking-[-0.02em] text-balance text-strong">Perguntas que a gente mais ouve</h2>

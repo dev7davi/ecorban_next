@@ -7,7 +7,7 @@ const link = "text-neutral-400 transition-colors hover:text-white";
 
 export function Footer() {
   return (
-    <footer className="border-t border-neutral-800 bg-[#0b1220] px-4 pt-16 pb-24 text-[15px] sm:px-8 sm:pb-8">
+    <footer className="border-t border-neutral-800 bg-[#0b1220] px-[19px] pt-16 pb-24 text-[15px] sm:px-8 sm:pb-8">
       <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[5fr_7fr]">
         <div className="rounded-2xl bg-linear-to-br from-brand-900 to-brand-950 p-7 ring-1 ring-white/10">
           <h2 className="text-xl font-semibold text-white">Fale com um especialista</h2>

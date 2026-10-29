@@ -11,7 +11,6 @@ const EASE = "power3.out";
 
 /*
  * Cenas de movimento da página, ligadas por atributos data-* nas seções:
- *  data-header                cabeçalho some ao rolar para baixo e volta ao subir
  *  data-hero-*                timeline de entrada do herói + parallax
  *  data-split                 títulos sobem linha a linha (SplitText com máscara)
  *  data-reveal                entrada suave em lote (ScrollTrigger.batch)
@@ -27,7 +26,6 @@ export function ScrollScenes() {
     const mm = gsap.matchMedia();
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      header();
       hero();
       splits();
       reveals();
@@ -49,20 +47,6 @@ export function ScrollScenes() {
   });
 
   return null;
-}
-
-function header() {
-  const el = document.querySelector<HTMLElement>("[data-header]");
-  if (!el) return;
-  const show = gsap.quickTo(el, "yPercent", { duration: 0.3, ease: "power2.out" });
-  ScrollTrigger.create({
-    start: 0,
-    end: "max",
-    onUpdate: (self) => {
-      if (document.getElementById("menu-mobile")) return show(0);
-      show(self.direction === 1 && self.scroll() > 240 ? -100 : 0);
-    },
-  });
 }
 
 function hero() {

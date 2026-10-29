@@ -31,7 +31,7 @@ export function Testimonials() {
   }, [video]);
 
   return (
-    <section id="depoimentos" className="relative overflow-hidden bg-linear-to-b from-brand-50 to-page px-4 py-16 sm:py-24 sm:px-8 dark:from-brand-950">
+    <section id="depoimentos" className="relative overflow-hidden bg-linear-to-b from-brand-50 to-page px-[19px] py-16 sm:py-24 sm:px-8 dark:from-brand-950">
       <Ring size={820} thickness={120} className="-top-40 left-[calc(50%-410px)]" />
       <Ring size={260} thickness={50} tone="soft" className="bottom-10 -left-20" />
 

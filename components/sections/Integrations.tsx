@@ -19,7 +19,7 @@ export function Integrations() {
   ];
 
   return (
-    <section className="px-4 py-16 sm:py-24 sm:px-8">
+    <section className="px-[19px] py-16 sm:py-24 sm:px-8">
       <div className="relative mx-auto max-w-6xl xl:h-[620px]">
         <Reveal className="relative z-10 mx-auto max-w-xl text-center xl:pt-6">
           <h2 data-split className="text-[clamp(30px,4vw,40px)] leading-[1.15] font-semibold tracking-[-0.02em] text-balance text-strong">Integrado aos bancos que a sua operação já usa</h2>

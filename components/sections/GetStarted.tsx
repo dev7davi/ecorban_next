@@ -6,7 +6,7 @@ import { Ring } from "@/components/ui/Ring";
 
 export function GetStarted() {
   return (
-    <section className="relative overflow-hidden bg-linear-to-r from-brand-50 to-brand-100 px-4 py-20 sm:px-8 dark:from-brand-950 dark:to-page-alt">
+    <section className="relative overflow-hidden bg-linear-to-r from-brand-50 to-brand-100 px-[19px] py-20 sm:px-8 dark:from-brand-950 dark:to-page-alt">
       <Ring size={380} thickness={72} className="-top-28 left-[58%]" />
       <Ring size={220} thickness={44} tone="soft" className="-bottom-28 left-[8%]" />
 

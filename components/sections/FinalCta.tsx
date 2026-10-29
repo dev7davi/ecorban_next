@@ -5,7 +5,7 @@ import { whatsappLink } from "@/content/site";
 
 export function FinalCta() {
   return (
-    <section className="relative overflow-hidden bg-chrome px-4 py-16 sm:py-24 text-center sm:px-8">
+    <section className="relative overflow-hidden bg-chrome px-[19px] py-16 sm:py-24 text-center sm:px-8">
       <div aria-hidden="true" data-ring className="pointer-events-none absolute -bottom-80 left-[calc(50%-450px)] size-[900px]">
         <Ring size={900} thickness={120} tone="brand" className="inset-0" />
       </div>

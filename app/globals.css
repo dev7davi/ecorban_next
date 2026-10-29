@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-/* Modo escuro por classe, como no sistema (darkMode: 'class') */
+/* Tema escuro DESATIVADO: o site é só claro. O variante dark: segue por classe (que nunca é aplicada), para não
+   reagir à preferência do sistema operacional. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* Design tokens — fonte da verdade: lib/tokens.ts (extraídos do sistema eCorban) */
@@ -111,8 +112,29 @@
 }
 
 html {
+  color-scheme: light;
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
+}
+
+/* Vidro fosco ("espelho fosco"): desfoque do que está atrás + véu azul-marinho (garante contraste do texto branco
+   mesmo sobre áreas claras da foto: contraste mínimo de 5:1 medido sobre a foto) + brilho na borda superior. Usado no formulário e nos mockups do herói. */
+.glass {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04)),
+    rgba(7, 24, 58, 0.65);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+    0 18px 40px -14px rgba(0, 0, 0, 0.55);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: rgba(7, 24, 58, 0.85);
+  }
 }
 
 /* Barra de rolagem fina, na paleta da marca. As cores trocam com o tema (claro/escuro). */
@@ -163,6 +185,72 @@ body {
 :focus-visible {
   outline: 2px solid var(--color-brand-500);
   outline-offset: 2px;
+}
+
+/*
+ * Herói com foto de fundo (2172×814: a foto original + 90px de continuação do fundo no topo, que fica
+ * atrás do menu transparente). A imagem cobre o palco com object-fit: cover; como o recorte muda com a
+ * largura da tela, os cards são ancorados em coordenadas DA IMAGEM (--u, --v), então ficam sempre nos
+ * mesmos pontos em volta da mulher.
+ *   --hu  altura da foto original em px (unitless); a escala é --hu / 724
+ *   --ht  altura do palco (foto + faixa do menu)     --t  posição alvo do rosto (fração da largura)
+ *   --f   rosto dentro da imagem (65,8% da largura)   --dw / --dh  tamanho renderizado da imagem
+ *   --opx deslocamento horizontal (object-position)   --sc  escala dos cards (acompanha a mulher)
+ * Tablet (768–1279px): texto em cima e foto embaixo; de 1280px em diante, texto à esquerda, foto à direita.
+ * Celular (< 768px): ver o bloco no fim desta seção.
+ */
+.hero-stage {
+  --hu: 440;
+  --t: 0.5;
+  --f: 0.658;
+  --ht: calc(var(--hu) * 1.1243px);
+  --dw: max(100vw, calc(var(--ht) * 2.6683));
+  --dh: calc(var(--dw) / 2.6683);
+  --opx: clamp(min(0px, calc(100vw - var(--dw))), calc(var(--t) * 100vw - var(--f) * var(--dw)), 0px);
+  --oy: calc((var(--ht) - var(--dh)) * 0.12);
+  --sc: calc(var(--hu) / 724);
+}
+@media (min-width: 768px) {
+  .hero-stage { --hu: 560; }
+}
+@media (min-width: 1024px) {
+  .hero-stage { --hu: 620; }
+}
+@media (min-width: 1280px) {
+  .hero-stage { --hu: 600; --t: 0.67; }
+}
+@media (min-width: 1536px) {
+  .hero-stage { --hu: 700; --t: 0.68; }
+}
+@media (min-width: 1792px) {
+  .hero-stage { --hu: 780; }
+}
+
+/* Cards: o ponto (--u, --v) é o CENTRO da caixa marcada; --c ajusta o tamanho do card à caixa */
+.hc {
+  position: absolute;
+  left: calc(var(--opx) + var(--u) * var(--dw));
+  top: calc(var(--oy) + var(--v) * var(--dh));
+}
+.hc-scale {
+  translate: -50% -50%;
+  scale: calc(var(--sc) * var(--c));
+}
+.hc[data-c="pagas"]     { --u: 0.573; --v: 0.1862; --c: 0.93; }
+.hc[data-c="visao"]     { --u: 0.544; --v: 0.5179; --c: 1.01; }
+.hc[data-c="comissoes"] { --u: 0.778; --v: 0.4023; --c: 0.946; }
+.hc[data-c="grafico"]   { --u: 0.7735; --v: 0.7643; --c: 1.15; }
+
+/* Celular (< 768px): a foto ocupa o topo da seção com a mulher no canto direito (rosto a 82% da largura) e a
+   altura acompanha a largura da tela. Os mockups viram uma grade abaixo do formulário (ver Hero.tsx). */
+@media (max-width: 767px) {
+  .hero-stage {
+    --ht: clamp(363px, 117vw, 484px);
+    --t: 0.82;
+  }
+  .hc {
+    display: none;
+  }
 }
 
 /* Até o GSAP assumir, o herói fica oculto para não "piscar" (ver motionScript em app/layout.tsx). */

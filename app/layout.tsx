@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import { site } from "@/content/site";
-import { motionScript, themeScript } from "@/lib/inlineScripts";
+import { motionScript } from "@/lib/inlineScripts";
 import "./globals.css";
 
 const figtree = Figtree({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-figtree", display: "swap" });
@@ -24,7 +24,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="pt-BR" className={figtree.variable} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript + motionScript }} />
+        <script dangerouslySetInnerHTML={{ __html: motionScript }} />
       </head>
       <body className="font-sans text-[17px] leading-relaxed">{children}</body>
     </html>

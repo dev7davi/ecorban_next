@@ -21,7 +21,7 @@ export function Pricing() {
   const [escolha, setEscolha] = useState<Record<string, Faixa>>(Object.fromEntries(tiers.map((t) => [t.id, t.faixas[0]])));
 
   return (
-    <section id="planos" className="px-4 py-16 sm:py-24 sm:px-8">
+    <section id="planos" className="px-[19px] py-16 sm:py-24 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <SectionTitle title="Planos por tamanho de equipe">De 3 a 320 usuários, com todos os módulos. Você escolhe a faixa e o ciclo.</SectionTitle>
