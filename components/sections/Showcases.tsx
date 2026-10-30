@@ -47,7 +47,9 @@ export function Showcases() {
                       {s.cta.label}
                     </Button>
                   </div>
-                  <Mockup />
+                  <div className="min-w-0">
+                    <Mockup />
+                  </div>
                 </article>
               </div>
             );

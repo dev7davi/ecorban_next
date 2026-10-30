@@ -1,8 +1,10 @@
 import { CheckIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import { ComissoesCard, GraficoCard, PagasCard, VisaoCard } from "@/components/mockups/HeroCards";
+import { ComissoesCard, MetaCard, PagasCard, SituacaoCard } from "@/components/mockups/HeroCards";
+import { Button } from "@/components/ui/Button";
 import { LeadForm } from "@/components/ui/LeadForm";
 import { hero } from "@/content/hero";
+import { whatsappLink } from "@/content/site";
 
 /*
  * Três layouts:
@@ -37,7 +39,7 @@ export function Hero() {
       </div>
 
       {/* Coluna do texto */}
-      <div className="relative z-10 mx-auto flex max-w-7xl px-[19px] pt-28 pb-10 sm:px-8 xl:h-full xl:items-center xl:pt-[70px] xl:pb-0">
+      <div className="relative z-10 mx-auto flex max-w-[clamp(1280px,90vw,1800px)] px-[19px] pt-28 pb-10 sm:px-8 xl:h-full xl:items-center xl:pt-[70px] xl:pb-0">
         <div className="flex w-full max-w-xl flex-col items-start xl:max-w-[500px] 2xl:max-w-[520px]">
           <div data-hero-badge className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 py-1.5 pr-3.5 pl-2 text-sm font-semibold text-white shadow-sm backdrop-blur max-md:gap-1.5 max-md:py-1 max-md:pr-2.5 max-md:pl-1.5 max-md:text-[11.2px]">
             <span className="grid size-5 place-items-center rounded-full bg-pipe-averbado max-md:size-4">
@@ -58,11 +60,8 @@ export function Hero() {
                 </span>{" "}
               </span>
             ))}
-            <span aria-hidden="true" data-hero-word className="relative inline-block tracking-normal text-brand-300 uppercase max-md:underline max-md:decoration-[#fb923c] max-md:decoration-[3px] max-md:underline-offset-[7px] md:whitespace-nowrap">
+            <span aria-hidden="true" data-hero-word className="inline-block font-extrabold tracking-normal text-brand-300 uppercase md:whitespace-nowrap">
               {hero.titleHighlight}
-              <svg viewBox="0 0 400 14" preserveAspectRatio="none" className="absolute -bottom-2 left-0 h-3 w-full max-md:hidden">
-                <path data-hero-underline pathLength={1} d="M3 9 C60 2, 110 12, 170 6 S300 3, 397 8" fill="none" stroke="#fb923c" strokeWidth="5" strokeLinecap="round" />
-              </svg>
             </span>
           </h1>
 
@@ -70,12 +69,18 @@ export function Hero() {
             {hero.subtitle}
           </p>
 
-          <div data-hero-form className="mt-7 w-full max-w-xl max-md:w-[80%]">
-            <LeadForm variant="glass" />
+          <div data-hero-form className="mt-7 md:w-full md:max-w-xl">
+            {/* Celular: só o botão de CTA. Tablet e desktop: campo + botão em vidro fosco. */}
+            <Button href={whatsappLink(hero.lead.message(""))} external arrow variant="white" size="md" className="px-4 py-2.5 text-xs md:hidden">
+              {hero.lead.button}
+            </Button>
+            <div className="max-md:hidden">
+              <LeadForm variant="glass" />
+            </div>
           </div>
 
           {/* Celular: os 4 mockups abaixo do formulário, em tamanho real */}
-          <div className="mt-6 grid w-full grid-cols-2 gap-3 md:hidden">
+          <div className="mt-[calc(1.5rem+4.5em)] grid w-full grid-cols-2 gap-3 md:hidden">
             <div data-reveal>
               <PagasCard className="h-full" />
             </div>
@@ -83,10 +88,10 @@ export function Hero() {
               <ComissoesCard className="h-full" />
             </div>
             <div data-reveal className="col-span-2">
-              <VisaoCard donutSize={68} />
+              <MetaCard />
             </div>
             <div data-reveal className="col-span-2">
-              <GraficoCard />
+              <SituacaoCard />
             </div>
           </div>
         </div>
@@ -118,14 +123,14 @@ export function Hero() {
         {/* Caixa 2 — à esquerda do rosto, acima do notebook */}
         <div className="hc" data-c="visao" data-hero-panel>
           <div className="hc-scale">
-            <VisaoCard className="w-[200px]" />
+            <MetaCard className="w-[200px]" />
           </div>
         </div>
 
         {/* Caixa 4 — embaixo à direita (25% mais largo que o original, deslocado 25% para a esquerda) */}
         <div className="hc" data-c="grafico" data-hero-panel>
           <div className="hc-scale">
-            <GraficoCard className="w-[260px]" />
+            <SituacaoCard className="w-[260px]" />
           </div>
         </div>
       </div>

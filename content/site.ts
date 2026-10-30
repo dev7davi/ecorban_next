@@ -4,6 +4,8 @@ export const site = {
   url: "https://ecorban.com.br",
   // TODO: confirmar a URL do portal de login
   loginUrl: "#",
+  // Cadastro do teste grátis (botão "Testar grátis" da página de planos oficial)
+  trialUrl: "https://ecorban.com/testar-gratuitamente",
   contact: {
     email: "comercial@ecorban.com.br",
     whatsappSales: "5517997055756",
@@ -26,6 +28,3 @@ export const features = {
   consultaCpfCnpj: false,
   logosDeClientes: true, // faixa de logos de clientes (confirmado pelo time em 29/10/2026)
 };
-
-// 5 integrações por API. Os demais bancos são apenas cadastráveis (não anunciar como integrados).
-export const integratedBanks = ["PAN", "C6", "Crefaz", "Facta", "QualiBanking"];

@@ -15,8 +15,16 @@ export function Header() {
   useEffect(() => {
     const update = () => setScrolled(window.scrollY > 24);
     update();
+    const raf = requestAnimationFrame(update);
     window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
+    window.addEventListener("hashchange", update);
+    window.addEventListener("load", update);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("hashchange", update);
+      window.removeEventListener("load", update);
+    };
   }, []);
 
   const solid = scrolled || open;
@@ -27,7 +35,7 @@ export function Header() {
         solid ? "border-white/10 bg-chrome/90 backdrop-blur-md" : "border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-[19px] py-3.5 sm:px-8">
+      <div className="mx-auto flex max-w-[clamp(1280px,90vw,1800px)] items-center justify-between gap-6 px-[19px] py-3.5 sm:px-8">
         <a href="#topo" aria-label="eCorban — início" className="shrink-0">
           <Image src="/logo/logo_white.svg" alt="eCorban" width={138} height={22} preload />
         </a>

@@ -2,7 +2,6 @@ import { ScrollScenes } from "@/components/motion/ScrollScenes";
 import { Faq } from "@/components/sections/Faq";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { Footer } from "@/components/sections/Footer";
-import { GetStarted } from "@/components/sections/GetStarted";
 import { Header } from "@/components/sections/Header";
 import { ClientsMarquee } from "@/components/sections/ClientsMarquee";
 import { Hero } from "@/components/sections/Hero";
@@ -25,7 +24,6 @@ export default function Home() {
         <Showcases />
         <HowItWorks />
         <Pricing />
-        <GetStarted />
         <Integrations />
         <Testimonials />
         <Faq />

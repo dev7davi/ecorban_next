@@ -53,7 +53,6 @@ function hero() {
   const tl = gsap.timeline({ defaults: { ease: EASE, duration: 0.8 } });
   tl.from("[data-hero-badge]", { autoAlpha: 0, y: 16, scale: 0.94 })
     .from("[data-hero-word]", { autoAlpha: 0, yPercent: 60, rotateX: -50, stagger: 0.06, duration: 0.9 }, "-=0.5")
-    .fromTo("[data-hero-underline]", { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut" }, "-=0.4")
     .from("[data-hero-sub]", { autoAlpha: 0, y: 20 }, "-=0.7")
     .from("[data-hero-form]", { autoAlpha: 0, y: 20, scale: 0.97 }, "-=0.6")
     .from("[data-hero-float]", { autoAlpha: 0, scale: 0.8, stagger: 0.12, ease: "back.out(1.6)" }, "-=0.5")

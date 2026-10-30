@@ -11,7 +11,7 @@ function Set({ hidden }: { hidden: boolean }) {
     <ul aria-hidden={hidden || undefined} className={`flex shrink-0 items-center ${hidden ? "motion-reduce:hidden" : "motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-y-6"}`}>
       {clients.map((c) => (
         <li key={c.name} className="shrink-0 pr-5 sm:pr-7">
-          <Image src={c.logo} alt={hidden ? "" : `Logo da ${c.name}`} width={67} height={67} className="size-[58px] rounded-[10px] saturate-0 sm:size-[67px]" />
+          <Image src={c.logo} alt={hidden ? "" : `Logo da ${c.name}`} width={74} height={74} className="size-[64px] rounded-[5px] sm:size-[74px]" />
         </li>
       ))}
     </ul>

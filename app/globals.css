@@ -118,22 +118,43 @@ html {
 }
 
 /* Vidro fosco ("espelho fosco"): desfoque do que está atrás + véu azul-marinho (garante contraste do texto branco
-   mesmo sobre áreas claras da foto: contraste mínimo de 5:1 medido sobre a foto) + brilho na borda superior. Usado no formulário e nos mockups do herói. */
+   mesmo sobre áreas claras da foto: contraste medido sobre a foto: ≥ 4,5:1 mesmo no ponto mais claro) + brilho na borda superior. Usado no formulário e nos mockups do herói. */
 .glass {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04)),
-    rgba(7, 24, 58, 0.65);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  backdrop-filter: blur(18px) saturate(140%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.0717), rgba(255, 255, 255, 0.0179)),
+    rgba(3, 12, 32, 0.291);
+  /* véu e desfoque 30% menores que antes (0,416→0,291 e 11,5px→8px) */
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  backdrop-filter: blur(8px) saturate(140%);
   border: 1px solid rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.45),
     inset 0 -1px 0 rgba(255, 255, 255, 0.08),
     0 18px 40px -14px rgba(0, 0, 0, 0.55);
 }
+.glass button {
+  text-shadow: none;
+}
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .glass {
-    background: rgba(7, 24, 58, 0.85);
+    background: rgba(3, 12, 32, 0.85);
+  }
+}
+
+/* Variante mais transparente (−20%) só para os mockups do herói em tablet/desktop; o celular mantém o .glass padrão.
+   Fica dentro de @supports para nunca valer sem o desfoque (sem ele o texto perderia contraste). */
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  @media (min-width: 768px) {
+    .glass-lighter {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.0574), rgba(255, 255, 255, 0.0144)),
+        rgba(3, 12, 32, 0.233);
+      text-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
+      /* véu e desfoque 30% menores que antes (0,333→0,233 e 9px→6,3px) */
+      -webkit-backdrop-filter: blur(6.3px) saturate(140%);
+      backdrop-filter: blur(6.3px) saturate(140%);
+    }
   }
 }
 

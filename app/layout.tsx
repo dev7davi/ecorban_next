@@ -4,7 +4,7 @@ import { site } from "@/content/site";
 import { motionScript } from "@/lib/inlineScripts";
 import "./globals.css";
 
-const figtree = Figtree({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-figtree", display: "swap" });
+const figtree = Figtree({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], variable: "--font-figtree", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),

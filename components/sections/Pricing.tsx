@@ -1,191 +1,338 @@
 "use client";
 
-import { BuildingOffice2Icon, CheckIcon, ChartBarIcon, UserGroupIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { ArrowUpRightIcon, ChatBubbleLeftRightIcon, CheckIcon, ChevronDownIcon, MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { Reveal } from "@/components/ui/Reveal";
+import { Ring } from "@/components/ui/Ring";
 import { SectionTitle } from "@/components/ui/SectionTitle";
-import { brl, ciclos, type Faixa, incluso, precoPorMes, tiers } from "@/content/pricing";
-import { whatsappLink } from "@/content/site";
+import { brl, type Ciclo, type CicloId, ciclos, type Faixa, faixas, precoPorMes, rotuloFaixa } from "@/content/pricing";
+import { site, whatsappLink } from "@/content/site";
 
-// Ilustrações line-art em círculos pastel, no estilo dos avisos do sistema.
-const art = [
-  { icon: UserGroupIcon, bg: "bg-brand-50 dark:bg-brand-950", fg: "text-brand-600 dark:text-brand-300", ring: "#fb923c" },
-  { icon: ChartBarIcon, bg: "bg-green-50 dark:bg-green-950/50", fg: "text-success", ring: "#2751c5" },
-  { icon: BuildingOffice2Icon, bg: "bg-orange-50 dark:bg-orange-950/40", fg: "text-pipe-analise", ring: "#22c55e" },
-];
+const resumo: Record<CicloId, string> = {
+  mensal: "Cobrança mês a mês, renovada automaticamente.",
+  trimestral: "Pague a cada 3 meses e economize 5%.",
+  semestral: "Pague a cada 6 meses e economize 10%.",
+  anual: "O melhor custo: 2 meses grátis no ano.",
+};
 
-export function Pricing() {
-  const [cicloId, setCicloId] = useState("anual");
-  const ciclo = ciclos.find((c) => c.id === cicloId)!;
-  const [escolha, setEscolha] = useState<Record<string, Faixa>>(Object.fromEntries(tiers.map((t) => [t.id, t.faixas[0]])));
+/** Chave liga/desliga do "pagamento à vista no boleto". */
+function Switch({ on, onChange, label, dark }: { on: boolean; onChange: (v: boolean) => void; label: string; dark: boolean }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on}
+      aria-label={label}
+      onClick={() => onChange(!on)}
+      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 ${
+        on ? (dark ? "bg-brand-950" : "bg-brand-600") : "bg-neutral-300"
+      }`}
+    >
+      <span
+        className={`inline-block size-5 rounded-full shadow transition-transform duration-200 ${on ? "translate-x-[22px]" : "translate-x-0.5"} ${
+          on && dark ? "bg-brand-300" : "bg-white"
+        }`}
+      />
+    </button>
+  );
+}
+
+/** Preço que desliza ao mudar (usuários ou boleto). */
+function Preco({ valor, className }: { valor: number; className: string }) {
+  const reduce = useReducedMotion();
+  return (
+    <span className={`relative inline-flex overflow-hidden ${className}`} aria-live="polite">
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+          key={valor}
+          initial={reduce ? false : { y: "100%", opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={reduce ? undefined : { y: "-100%", opacity: 0 }}
+          transition={{ duration: 0.28, ease: [0.33, 1, 0.68, 1] }}
+          className="tabular-nums"
+        >
+          {brl(valor)}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+}
+
+function Card({ c, usuarios, aVista, setAVista }: { c: Ciclo; usuarios: Faixa; aVista: boolean; setAVista: (v: boolean) => void }) {
+  const dark = !!c.popular;
+  const valor = precoPorMes(usuarios, c.id, aVista);
+  const renovacao = c.meses === 1 ? "a cada mês" : `a cada ${c.meses} meses`;
+  const msg = `Olá, quero contratar o plano ${c.nome} do eCorban para ${usuarios} usuários${aVista ? ", com pagamento à vista no boleto" : ""}.`;
 
   return (
-    <section id="planos" className="px-[19px] py-16 sm:py-24 sm:px-8">
-      <div className="mx-auto max-w-6xl">
-        <Reveal>
-          <SectionTitle title="Planos por tamanho de equipe">De 3 a 320 usuários, com todos os módulos. Você escolhe a faixa e o ciclo.</SectionTitle>
-        </Reveal>
+    <article
+      className={`group relative flex h-full flex-col rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1.5 ${
+        dark
+          ? "bg-linear-to-br from-brand-700 via-brand-800 to-brand-950 text-white shadow-[0_30px_60px_-24px_rgba(22,44,105,.75)] ring-1 ring-white/10 xl:-translate-y-3 xl:hover:-translate-y-4"
+          : "bg-surface text-strong shadow-[0_10px_30px_-18px_rgba(17,24,39,.35)] ring-1 ring-line/70 hover:shadow-[0_24px_50px_-24px_rgba(39,81,197,.45)]"
+      }`}
+    >
+      {dark && (
+        <span className="absolute -top-3 left-6 rounded-full bg-brand-300 px-3 py-1 text-xs font-bold tracking-wide text-brand-950 uppercase shadow">
+          Mais escolhido
+        </span>
+      )}
 
-        {/* Seletor de ciclo */}
-        <div className="mt-8 flex flex-col items-center gap-3">
-          {/* Grade 2×2 no celular; pílula única a partir do sm */}
-          <div role="radiogroup" aria-label="Ciclo de pagamento" className="grid w-full max-w-sm grid-cols-2 gap-1 rounded-2xl bg-page-alt p-1 ring-1 ring-line/60 sm:inline-flex sm:w-auto sm:max-w-none sm:rounded-full">
-            {ciclos.map((c) => (
-              <button
-                key={c.id}
-                role="radio"
-                aria-checked={c.id === cicloId}
-                onClick={() => setCicloId(c.id)}
-                className={`relative rounded-xl px-4 py-2.5 text-sm font-semibold whitespace-nowrap transition-colors sm:rounded-full sm:py-2 ${c.id === cicloId ? "bg-brand-600 text-white shadow" : "text-body hover:text-strong"}`}
-              >
-                {c.nome}
-                {c.popular && <span className="ml-1.5 rounded-full bg-pipe-averbado px-1.5 py-0.5 text-[10px] text-white">Mais escolhido</span>}
-              </button>
-            ))}
-          </div>
-          <p className="text-center text-sm text-balance text-muted">Trimestral 5% off · Semestral 10% off · Anual com 2 meses grátis</p>
-        </div>
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="text-lg font-extrabold tracking-wide uppercase">{c.nome}</h3>
+        {c.selo && (
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={aVista ? "b" : "n"}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              className={`rounded-full px-2.5 py-1 text-xs font-bold whitespace-nowrap ${dark ? "bg-brand-300 text-brand-950" : "bg-brand-50 text-brand-700"}`}
+            >
+              {aVista ? c.seloBoleto : c.selo}
+            </motion.span>
+          </AnimatePresence>
+        )}
+      </div>
+      <p className={`mt-2 min-h-[2.75rem] text-sm ${dark ? "text-brand-100" : "text-muted"}`}>{resumo[c.id]}</p>
 
-        {/* Cards de plano */}
-        <div className="mx-auto mt-12 grid max-w-md gap-6 lg:max-w-none lg:grid-cols-3">
-          {tiers.map((tier, i) => {
-            const faixa = escolha[tier.id];
-            const mes = precoPorMes(faixa, ciclo);
-            const A = art[i];
-            return (
-              <Reveal key={tier.id}>
-                <div className={`flex h-full flex-col rounded-2xl bg-page-alt p-6 ring-1 ${tier.destaque ? "ring-2 ring-brand-600" : "ring-line/60"}`}>
-                  <div className={`relative grid h-40 place-items-center overflow-hidden rounded-xl ${A.bg}`} aria-hidden="true">
-                    <span className="absolute top-5 right-8 size-5 rounded-full border-4" style={{ borderColor: A.ring }} />
-                    <span className="absolute bottom-6 left-8 size-3 rounded-full" style={{ background: A.ring }} />
-                    <span className="grid size-24 place-items-center rounded-full bg-surface shadow-sm">
-                      <A.icon className={`size-12 ${A.fg}`} strokeWidth={1.75} />
-                    </span>
-                  </div>
+      {/* Pílula do preço, com a chave do boleto (como na referência) */}
+      <div className={`mt-5 flex items-center justify-between gap-2 rounded-full py-2.5 pr-2.5 pl-4 sm:pl-5 xl:pl-4 ${dark ? "bg-white text-strong" : "bg-page-alt ring-1 ring-line/70"}`}>
+        <span className="flex items-baseline gap-1">
+          <Preco valor={valor} className="text-[22px] leading-tight font-extrabold xl:text-[19px]" />
+          <span className="text-xs text-muted sm:text-sm xl:text-xs">/mês</span>
+        </span>
+        {c.id !== "mensal" && <Switch on={aVista} onChange={setAVista} label={`Pagamento à vista no boleto, plano ${c.nome}`} dark={dark} />}
+      </div>
+      <p className={`mt-2 px-1 text-xs ${dark ? "text-brand-100" : "text-muted"}`}>
+        {c.id === "mensal" ? "Cobrança mensal" : aVista ? `À vista no boleto · ${c.seloBoleto}` : "Ative para pagar à vista no boleto"}
+      </p>
 
-                  <div className="mt-6 flex items-center gap-2">
-                    <h3 className="text-xl font-semibold text-strong">{tier.nome}</h3>
-                    {tier.destaque && <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-semibold text-brand-600 dark:bg-brand-950 dark:text-brand-300">Recomendado</span>}
-                  </div>
-                  <p className="mt-1 text-sm text-muted">{tier.descricao}</p>
+      <ul className={`mt-6 flex flex-col gap-3 text-sm ${dark ? "text-white" : "text-body"}`}>
+        {["Todos os módulos do sistema", `Até ${usuarios} usuários`, `Renovação automática ${renovacao}`].map((t) => (
+          <li key={t} className="flex items-center gap-3">
+            <span className={`size-1.5 shrink-0 rounded-full ${dark ? "bg-brand-300" : "bg-brand-600"}`} />
+            {t}
+          </li>
+        ))}
+      </ul>
 
-                  <label className="mt-5 block text-xs font-semibold text-muted" htmlFor={`faixa-${tier.id}`}>
-                    Usuários
-                  </label>
-                  <select
-                    id={`faixa-${tier.id}`}
-                    value={faixa}
-                    onChange={(e) => setEscolha({ ...escolha, [tier.id]: Number(e.target.value) as Faixa })}
-                    className="mt-1 w-full rounded-md border border-line bg-surface px-3 py-2.5 text-[15px] font-semibold text-strong"
-                  >
-                    {tier.faixas.map((f) => (
-                      <option key={f} value={f}>
-                        Até {f} usuários
-                      </option>
-                    ))}
-                  </select>
+      {/* CTA em pílula com a seta num círculo (como na referência) */}
+      <div className="mt-auto pt-8">
+        <a
+          href={site.trialUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`flex items-center justify-between rounded-full py-2 pr-2 pl-6 text-[15px] font-semibold transition-colors ${
+            dark ? "bg-brand-300 text-brand-950 hover:bg-brand-200" : "bg-chrome text-white hover:bg-brand-900"
+          }`}
+        >
+          Testar grátis
+          <span
+            className={`grid size-9 place-items-center rounded-full transition-transform duration-300 group-hover:rotate-45 ${
+              dark ? "bg-brand-950 text-brand-300" : "bg-brand-300 text-brand-950"
+            }`}
+          >
+            <ArrowUpRightIcon className="size-4" strokeWidth={2.4} aria-hidden="true" />
+          </span>
+        </a>
+        <a
+          href={whatsappLink(msg)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`mt-3 flex items-center justify-center gap-1.5 text-sm font-semibold underline-offset-4 hover:underline ${dark ? "text-white" : "text-brand-600"}`}
+        >
+          <ChatBubbleLeftRightIcon className="size-4" aria-hidden="true" />
+          Falar no WhatsApp
+        </a>
+        <p className={`mt-3 text-center text-[11px] ${dark ? "text-brand-200" : "text-muted"}`}>* taxa de adesão</p>
+      </div>
+    </article>
+  );
+}
 
-                  <div className="mt-5 flex items-baseline gap-1">
-                    <span className="text-4xl font-bold tracking-tight text-strong tabular-nums">{brl(mes)}</span>
-                    <span className="text-sm text-muted">/mês</span>
-                  </div>
-                  <div className="mt-1 text-xs text-muted">
-                    {ciclo.meses === 1 ? "Cobrado todo mês" : `${brl(mes * ciclo.meses)} à vista a cada ${ciclo.meses} meses`}
-                  </div>
+const COLUNAS = 5;
 
-                  <ul className="mt-5 flex flex-1 flex-col gap-2.5">
-                    {[`Até ${faixa} usuários`, ...incluso].map((item) => (
-                      <li key={item} className="flex items-center gap-2.5 text-[15px] text-body">
-                        <span className="grid size-5 shrink-0 place-items-center rounded-full bg-brand-600">
-                          <CheckIcon className="size-3 text-white" strokeWidth={3} />
-                        </span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+/**
+ * Seletor de usuários no lugar do <select> do navegador: o painel abre em grade (as 35 faixas visíveis de uma vez,
+ * sem rolagem), no mesmo escuro da barra. Teclado: setas movem o foco (←→ 1, ↑↓ uma linha), Home/End, Enter escolhe,
+ * Esc fecha e devolve o foco ao botão. Clicar fora fecha.
+ */
+function UsuariosPicker({ usuarios, onChange }: { usuarios: Faixa; onChange: (u: Faixa) => void }) {
+  const [open, setOpen] = useState(false);
+  const reduce = useReducedMotion();
+  const wrap = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const opts = useRef<(HTMLButtonElement | null)[]>([]);
+  const atual = faixas.indexOf(usuarios);
 
-                  <Button href={whatsappLink(`Olá, quero contratar o plano ${tier.nome} ${ciclo.nome} (até ${faixa} usuários).`)} external arrow className="mt-6 w-full">
-                    Contratar
-                  </Button>
-                  <Button href={whatsappLink(`Olá, tenho dúvidas sobre o plano ${tier.nome} (até ${faixa} usuários).`)} external variant="secondary" className="mt-2 w-full">
-                    Falar no WhatsApp
-                  </Button>
-                </div>
-              </Reveal>
-            );
-          })}
-        </div>
+  useEffect(() => {
+    if (!open) return;
+    opts.current[atual]?.focus();
+    const fora = (e: PointerEvent) => {
+      if (!wrap.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", fora);
+    return () => document.removeEventListener("pointerdown", fora);
+    // só ao abrir: o foco inicial vai para a faixa escolhida
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
-        {/* Comparativo de ciclos */}
-        <Reveal>
-          {/* Celular: um mini-card por ciclo + o que todos incluem (a tabela exigiria rolagem lateral) */}
-          <div className="mt-12 md:hidden">
-            <h3 className="text-center font-semibold text-strong">Ciclos e condições</h3>
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              {ciclos.map((c) => (
-                <button
-                  key={c.id}
-                  onClick={() => setCicloId(c.id)}
-                  aria-pressed={c.id === cicloId}
-                  className={`rounded-xl p-4 text-left ring-1 transition-colors ${c.id === cicloId ? "bg-brand-50 ring-2 ring-brand-600 dark:bg-brand-950" : "bg-page-alt ring-line/60"}`}
-                >
-                  <div className="font-semibold text-strong">{c.nome}</div>
-                  <div className="mt-1 text-sm font-medium text-success">{c.desconto === "—" ? "Sem desconto" : c.desconto}</div>
-                  <div className="mt-0.5 text-xs text-muted">{c.meses === 1 ? "Cobrança mensal" : `Cobrança a cada ${c.meses} meses`}</div>
-                </button>
-              ))}
+  const mover = (para: number) => opts.current[Math.min(faixas.length - 1, Math.max(0, para))]?.focus();
+  const teclas = (e: React.KeyboardEvent) => {
+    const foco = opts.current.findIndex((el) => el === document.activeElement);
+    const passos: Record<string, number> = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: COLUNAS, ArrowUp: -COLUNAS };
+    if (e.key in passos) {
+      e.preventDefault();
+      mover((foco < 0 ? atual : foco) + passos[e.key]);
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      mover(0);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      mover(faixas.length - 1);
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      setOpen(false);
+      trigger.current?.focus();
+    }
+  };
+
+  return (
+    <div ref={wrap} className="contents">
+      <button
+        ref={trigger}
+        type="button"
+        id="planos-usuarios"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls="planos-usuarios-lista"
+        onClick={() => setOpen((v) => !v)}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowDown" && !open) {
+            e.preventDefault();
+            setOpen(true);
+          }
+        }}
+        className="flex cursor-pointer items-center gap-2 rounded-full bg-brand-300 py-2 pr-3.5 pl-5 text-[15px] font-bold text-brand-950 tabular-nums transition-colors hover:bg-brand-200 focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:outline-none"
+      >
+        {rotuloFaixa(usuarios)}
+        <ChevronDownIcon className={`size-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`} strokeWidth={2.4} aria-hidden="true" />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            id="planos-usuarios-lista"
+            role="listbox"
+            aria-label="Quantidade de usuários"
+            onKeyDown={teclas}
+            initial={reduce ? false : { opacity: 0, y: -8, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={reduce ? undefined : { opacity: 0, y: -8, scale: 0.97 }}
+            transition={{ duration: 0.18, ease: [0.33, 1, 0.68, 1] }}
+            style={{ transformOrigin: "top center" }}
+            className="absolute top-full left-1/2 z-30 mt-3 w-[min(348px,calc(100vw-38px))] -translate-x-1/2 rounded-3xl bg-chrome p-4 shadow-[0_28px_60px_-18px_rgba(17,24,39,.75)] ring-1 ring-white/10"
+          >
+            <div className="mb-3 flex items-baseline justify-between px-1">
+              <span className="text-sm font-semibold text-white">Tamanho da equipe</span>
+              <span className="text-xs text-white/55">de {faixas[0]} a {faixas[faixas.length - 1]} usuários</span>
             </div>
-            <ul className="mt-4 grid gap-2 rounded-xl bg-page-alt p-4 text-sm text-body ring-1 ring-line/60">
-              {["Pagamento à vista no boleto", "Renovação automática", "Todos os módulos", "Teste grátis de 7 dias"].map((item) => (
-                <li key={item} className="flex items-center gap-2">
-                  <CheckIcon className="size-4 shrink-0 text-success" strokeWidth={2.5} aria-hidden="true" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
+            <div className="grid grid-cols-5 gap-1.5">
+              {faixas.map((u, i) => {
+                const on = u === usuarios;
+                return (
+                  <button
+                    key={u}
+                    ref={(el) => {
+                      opts.current[i] = el;
+                    }}
+                    type="button"
+                    role="option"
+                    aria-selected={on}
+                    tabIndex={on ? 0 : -1}
+                    onClick={() => {
+                      onChange(u);
+                      setOpen(false);
+                      trigger.current?.focus();
+                    }}
+                    className={`relative grid h-10 cursor-pointer place-items-center rounded-full text-sm font-semibold tabular-nums transition-colors focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:outline-none ${
+                      on ? "bg-brand-300 text-brand-950" : "text-white/85 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    {String(u).padStart(2, "0")}
+                    {on && <CheckIcon className="absolute -top-0.5 -right-0.5 size-4 rounded-full bg-brand-950 p-0.5 text-brand-300" strokeWidth={3.2} aria-hidden="true" />}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-3 px-1 text-xs text-white/55">Escolha o número de usuários do seu time. O preço atualiza na hora.</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
-          <div className="mt-14 hidden overflow-x-auto rounded-2xl ring-1 ring-line/60 md:block">
-            <table className="w-full min-w-[640px] text-center text-[15px]">
-              <caption className="sr-only">Comparativo dos ciclos de pagamento</caption>
-              <thead className="bg-page-alt">
-                <tr>
-                  <th scope="col" className="px-5 py-4 text-left font-semibold text-strong">
-                    Ciclos e condições
-                  </th>
-                  {ciclos.map((c) => (
-                    <th key={c.id} scope="col" className={`px-5 py-4 font-semibold ${c.id === cicloId ? "text-brand-600 dark:text-brand-300" : "text-strong"}`}>
-                      {c.nome}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-line/60">
-                {[
-                  ["Desconto", ciclos.map((c) => c.desconto)],
-                  ["Cobrança", ciclos.map((c) => (c.meses === 1 ? "Mensal" : `A cada ${c.meses} meses`))],
-                  ["Pagamento à vista no boleto", ciclos.map(() => true)],
-                  ["Renovação automática", ciclos.map(() => true)],
-                  ["Todos os módulos", ciclos.map(() => true)],
-                  ["Teste grátis de 7 dias", ciclos.map(() => true)],
-                ].map(([label, vals]) => (
-                  <tr key={label as string}>
-                    <th scope="row" className="px-5 py-3.5 text-left font-medium text-body">
-                      {label as string}
-                    </th>
-                    {(vals as (string | boolean)[]).map((v, i) => (
-                      <td key={i} className="px-5 py-3.5 text-muted">
-                        {v === true ? <CheckIcon className="mx-auto size-5 text-success" strokeWidth={2.5} aria-label="Incluso" /> : (v as string)}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-4 text-center text-sm text-muted">Há taxa de adesão na contratação. Valores ilustrativos até a confirmação da tabela oficial.</p>
+export function Pricing() {
+  const [usuarios, setUsuarios] = useState<Faixa>(3);
+  const [boleto, setBoleto] = useState<Record<CicloId, boolean>>({ mensal: false, trimestral: false, semestral: false, anual: false });
+  const i = faixas.indexOf(usuarios);
+  const passo = (d: number) => setUsuarios(faixas[Math.min(faixas.length - 1, Math.max(0, i + d))]);
+
+  return (
+    <section id="planos" className="relative overflow-hidden bg-linear-to-b from-page via-brand-50/50 to-page px-[19px] py-16 sm:px-8 sm:py-24">
+      <Ring size={520} thickness={80} tone="soft" className="-top-40 -left-48" />
+      <Ring size={380} thickness={64} tone="soft" className="top-1/2 -right-40" />
+
+      <div className="relative mx-auto max-w-6xl">
+        <Reveal>
+          <SectionTitle title="Qual plano combina mais com a sua empresa?">
+            Todos os módulos, de 3 a 320 usuários. Escolha o tamanho da equipe e o ciclo de pagamento.
+          </SectionTitle>
         </Reveal>
+
+        {/* Barra escura em pílula, com a faixa de usuários em destaque (como as abas da referência) */}
+        <div className="relative z-20 mt-9 flex justify-center">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-chrome p-1.5 pl-5 shadow-[0_14px_30px_-14px_rgba(17,24,39,.6)]">
+            <label htmlFor="planos-usuarios" className="mr-1 hidden text-sm font-medium text-white/80 sm:block">
+              Quantos usuários?
+            </label>
+            <button
+              type="button"
+              onClick={() => passo(-1)}
+              disabled={i === 0}
+              aria-label="Menos usuários"
+              className="grid size-9 place-items-center rounded-full text-white transition-colors hover:bg-white/10 disabled:opacity-30"
+            >
+              <MinusIcon className="size-4" strokeWidth={2.4} />
+            </button>
+            <UsuariosPicker usuarios={usuarios} onChange={setUsuarios} />
+            <button
+              type="button"
+              onClick={() => passo(1)}
+              disabled={i === faixas.length - 1}
+              aria-label="Mais usuários"
+              className="grid size-9 place-items-center rounded-full text-white transition-colors hover:bg-white/10 disabled:opacity-30"
+            >
+              <PlusIcon className="size-4" strokeWidth={2.4} />
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          {ciclos.map((c) => (
+            <Reveal key={c.id} className="h-full">
+              <Card c={c} usuarios={usuarios} aVista={boleto[c.id]} setAVista={(v) => setBoleto({ ...boleto, [c.id]: v })} />
+            </Reveal>
+          ))}
+        </div>
+
+        <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-pretty text-muted">
+          Todos os planos incluem todos os módulos do sistema. * Há taxa de adesão na contratação — fale com o nosso time para saber o valor.
+        </p>
       </div>
     </section>
   );

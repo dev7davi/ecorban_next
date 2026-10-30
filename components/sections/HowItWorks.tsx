@@ -22,12 +22,12 @@ export function HowItWorks() {
         {/* Linha do tempo: a barra enche e os passos acendem conforme a rolagem. */}
         <div data-steps className="rounded-2xl bg-page-alt p-4 ring-1 ring-line/50 sm:p-6">
           <div className="mb-5 h-1.5 overflow-hidden rounded-full bg-line/60" aria-hidden="true">
-            <div data-steps-line className="h-full origin-left rounded-full bg-linear-to-r from-pipe-simulado via-pipe-pendencia to-pipe-pago" />
+            <div data-steps-line className="h-full origin-left rounded-full" style={{ background: `linear-gradient(90deg, ${steps.map((s) => s.color).join(", ")})` }} />
           </div>
           <ol className="grid gap-4 sm:grid-cols-2">
             {steps.map((step, i) => (
               <li key={step.title} data-step className="flex h-full gap-4 rounded-xl bg-surface p-5 shadow-sm">
-                <span data-step-dot className="grid size-10 shrink-0 place-items-center rounded-full text-sm font-bold text-white" style={{ background: step.color }}>
+                <span data-step-dot className={`grid size-10 shrink-0 place-items-center rounded-full text-sm font-bold ${step.dark ? "text-[#111827]" : "text-white"}`} style={{ background: step.color }}>
                   {i + 1}
                 </span>
                 <div>

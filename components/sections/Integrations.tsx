@@ -1,7 +1,8 @@
-import { ArrowUpRightIcon, BuildingLibraryIcon } from "@heroicons/react/24/outline";
+import { ArrowUpRightIcon, BuildingLibraryIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { BankLogo, bancos } from "@/components/mock/system";
 import { Reveal } from "@/components/ui/Reveal";
 import { differentiators } from "@/content/differentiators";
-import { integratedBanks, whatsappLink } from "@/content/site";
+import { whatsappLink } from "@/content/site";
 
 // Posições (left%, top%) da "nuvem" no desktop, em arco ao redor do texto central.
 const spots = [
@@ -13,7 +14,22 @@ const tile = "flex flex-col items-center justify-center gap-1.5 rounded-xl bg-su
 
 export function Integrations() {
   const tiles = [
-    ...integratedBanks.map((b) => ({ key: b, node: <span className="text-lg font-bold tracking-tight text-brand-700 dark:text-brand-300">{b}</span>, label: "Integrado" })),
+    // Bancos como aparecem em Integrações Bancárias: logo pequena + nome + a marcação "Ativa"
+    ...bancos.map((b) => ({
+      key: b,
+      node: <BankLogo b={b} size={28} />,
+      label: (
+        <span className="flex flex-col items-center gap-1">
+          <span className="font-semibold text-strong">{b}</span>
+          <span className="inline-flex items-center gap-1 text-[10px] text-brand-700">
+            <span className="grid size-3 place-items-center rounded-[3px] bg-brand-600 text-white">
+              <CheckIcon className="size-2.5" strokeWidth={3.5} />
+            </span>
+            Ativa
+          </span>
+        </span>
+      ),
+    })),
     ...differentiators.map((d) => ({ key: d.title, node: <d.icon className="size-6 text-brand-600 dark:text-brand-300" />, label: d.title })),
     { key: "outros", node: <BuildingLibraryIcon className="size-6 text-muted" />, label: "+ bancos cadastráveis" },
   ];
@@ -24,7 +40,7 @@ export function Integrations() {
         <Reveal className="relative z-10 mx-auto max-w-xl text-center xl:pt-6">
           <h2 data-split className="text-[clamp(30px,4vw,40px)] leading-[1.15] font-semibold tracking-[-0.02em] text-balance text-strong">Integrado aos bancos que a sua operação já usa</h2>
           <p className="mt-4 text-pretty text-muted">
-            Simule e digite direto no PAN, C6, Crefaz, Facta e QualiBanking, com o status voltando sozinho para a esteira. Os demais bancos você cadastra no sistema.
+            Simule e digite direto no PAN, C6, Crefaz, Facta e QualiBanking, e mande a simulação para a esteira em um clique. Os demais bancos você cadastra no sistema.
           </p>
           <a
             href={whatsappLink("Olá, quero saber mais sobre as integrações bancárias do eCorban.")}
