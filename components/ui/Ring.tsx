@@ -4,6 +4,7 @@ const tones = {
   brand: "border-brand-500/20",
   soft: "border-brand-200/40 dark:border-brand-400/[.06]",
   faint: "border-white/[.028]", // sobre fundo escuro, quase imperceptível
+  onphoto: "border-white/[.09]", // sobre foto escurecida
 };
 
 type Props = { size: number; thickness?: number; tone?: keyof typeof tones; className?: string };

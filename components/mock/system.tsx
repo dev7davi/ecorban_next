@@ -1,5 +1,4 @@
 import {
-  ArrowPathIcon,
   Bars3Icon,
   BellIcon,
   ChevronDownIcon,
@@ -187,7 +186,7 @@ export function SystemFrame({
       </div>
       {/* Faixa de abas abertas: a ativa sublinhada em azul */}
       <div className={`flex items-end gap-1 overflow-hidden px-2 pt-1 text-[10px] ${t.tabs}`}>
-        {[...abas, tela].map((a) => {
+        {(abas.includes(tela) ? abas : [...abas, tela]).map((a) => {
           const on = a === tela;
           return (
             <span
@@ -206,21 +205,19 @@ export function SystemFrame({
   );
 }
 
-/** Barra de filtros reduzida: período/busca + "Filtros" + hora da atualização + botão primário. */
+/** Barra de filtros reduzida: período/busca + "Filtros" + botão de ação opcional (sem relógio nem "+ Nova …"). */
 export function FilterBar({
   mode = "light",
   left,
   filtro = "Filtros",
   primary,
   plus = true,
-  hora = true,
 }: {
   mode?: Mode;
   left?: ReactNode;
   filtro?: string | null;
   primary?: string;
   plus?: boolean;
-  hora?: boolean;
 }) {
   const t = sys[mode];
   return (
@@ -232,11 +229,6 @@ export function FilterBar({
         </span>
       )}
       <span className="ml-auto flex shrink-0 items-center gap-1.5">
-        {hora && (
-          <span className={`hidden items-center gap-0.5 text-[10px] tabular-nums sm:inline-flex ${t.sub}`}>
-            <ArrowPathIcon className="size-3" /> 17:13
-          </span>
-        )}
         {primary && (
           <span className="inline-flex items-center gap-1 rounded-md bg-[#2751c5] px-2 py-1 text-[10px] font-semibold whitespace-nowrap text-white">
             {plus && <PlusIcon className="size-3" strokeWidth={2.5} />} {primary}
@@ -432,7 +424,7 @@ export function VBars({ mode = "light", items, h = 64 }: { mode?: Mode; items: {
 
 /** Tabela do sistema (§3.7): cabeçalho cinza sem fundo, divisores finos, valores à direita, linha Total opcional. */
 export type Col = { h: string; right?: boolean; className?: string };
-export function DataTable({ mode = "light", cols, rows, total }: { mode?: Mode; cols: Col[]; rows: ReactNode[][]; total?: ReactNode[] }) {
+export function DataTable({ mode = "light", cols, rows, total, rowClassName }: { mode?: Mode; cols: Col[]; rows: ReactNode[][]; total?: ReactNode[]; rowClassName?: (i: number) => string }) {
   const t = sys[mode];
   const cell = (c: Col) => `px-2 py-1.5 align-middle ${c.right ? "text-right tabular-nums" : ""} ${c.className ?? ""}`;
   return (
@@ -448,7 +440,7 @@ export function DataTable({ mode = "light", cols, rows, total }: { mode?: Mode; 
       </thead>
       <tbody className={t.text}>
         {rows.map((r, i) => (
-          <tr key={i} className={`border-b last:border-0 ${t.border}`}>
+          <tr key={i} className={`border-b last:border-0 ${t.border} ${rowClassName?.(i) ?? ""}`}>
             {r.map((v, j) => (
               <td key={j} className={cell(cols[j])}>
                 {v}

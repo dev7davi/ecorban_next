@@ -95,16 +95,14 @@ function reveals() {
 }
 
 function stack() {
-  // Os cards só grudam no topo a partir do lg (lg:sticky); abaixo disso o efeito apenas borraria o card anterior.
+  // Os cards só grudam no topo a partir do lg (lg:sticky); abaixo disso o efeito só encolheria o card anterior.
   if (!window.matchMedia("(min-width: 1024px)").matches) return;
   const cards = gsap.utils.toArray<HTMLElement>("[data-stack-card]");
   cards.forEach((card, i) => {
     const next = cards[i + 1];
     if (!next) return;
     gsap.to(card.firstElementChild, {
-      scale: 0.92,
-      autoAlpha: 0.45,
-      filter: "blur(2px)",
+      scale: 0.92, // o card de trás só encolhe: sem desfoque e sem ficar transparente
       ease: "none",
       scrollTrigger: { trigger: next, start: "top bottom", end: "top 120px", scrub: true },
     });

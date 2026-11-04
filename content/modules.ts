@@ -67,8 +67,8 @@ export const modules: Module[] = [
     tab: "Relatórios",
     title: "Relatórios e dashboards",
     icon: PresentationChartBarIcon,
-    text: "Dashboard, rankings e desempenho por período, por vendedor e por banco.",
-    bullets: ["Modo TV para o escritório", "Rankings por banco, vendedor e loja", "Calendário de produção do mês"],
+    text: "Rankings, desempenho por período e calendário de produção — com valor, quantidade e comissão por banco e por vendedor.",
+    bullets: ["Rankings Diversos: banco, vendedor e loja", "Desempenho por período, com comparativo", "Calendário de produção, dia a dia"],
     highlight: { value: "Barras ou pizza", label: "em 1 clique" },
   },
   {

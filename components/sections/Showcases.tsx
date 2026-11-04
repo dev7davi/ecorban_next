@@ -19,8 +19,9 @@ function Arcs() {
 }
 
 export function Showcases() {
+  // O fundo e o recorte ficam no contêiner de page.tsx, compartilhado com a seção anterior (Humanized)
   return (
-    <section className="relative overflow-hidden bg-linear-to-b from-brand-50 to-brand-100/60 px-[19px] py-16 sm:py-24 sm:px-8 dark:from-page-alt dark:to-page">
+    <section className="relative px-[19px] py-16 sm:px-8 sm:py-24">
       <Ring size={640} thickness={100} className="-top-40 -right-48" />
       <Ring size={760} thickness={110} className="-bottom-64 -left-56" />
       <Ring size={300} thickness={56} tone="soft" className="top-1/2 -right-24" />

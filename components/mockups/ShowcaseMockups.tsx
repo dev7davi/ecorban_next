@@ -105,7 +105,7 @@ export function PipelineMockup() {
       label="Tela de Propostas do eCorban no modo escuro: lista de propostas com status, o histórico de uma proposta com cada mudança e o alerta de pendência no sino."
       overlay={<SinoDropdown />}
     >
-      <FilterBar mode="light" left={<SearchChip mode="light" className="w-28">Pesquisar…</SearchChip>} filtro="Filtros · Últimos 7 dias" primary="Nova Proposta" />
+      <FilterBar mode="light" left={<SearchChip mode="light" className="w-28">Pesquisar…</SearchChip>} filtro="Filtros · Últimos 7 dias" />
       {/* O modal fica sobreposto à lista e acompanha a altura dela (sem folga cinza embaixo) */}
       <div className="relative">
         <div className="flex flex-col gap-2">

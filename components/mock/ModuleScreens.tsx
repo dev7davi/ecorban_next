@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ArrowRightIcon,
   ArrowTrendingDownIcon,
@@ -16,7 +18,8 @@ import {
   ShieldCheckIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import type { ReactNode } from "react";
+import { useReducedMotion } from "framer-motion";
+import { type ReactNode, useEffect, useState } from "react";
 import {
   Avatar,
   BankLogo,
@@ -26,10 +29,8 @@ import {
   Chip,
   DataTable,
   FilterBar,
-  KpiCard,
   MetaBar,
   MiniKpiTile,
-  Pie,
   PROPOSTAS,
   ProposalCard,
   RitmoPill,
@@ -59,7 +60,7 @@ function Esteira() {
   ] as const;
   return (
     <SystemFrame tela="Propostas" abas={["Home", "Dashboard"]} link="Propostas" label="Tela de Propostas do eCorban: totalizador do período e três propostas com seus status.">
-      <FilterBar left={<><SelectChip className={hide}>CPF Cliente</SelectChip><SearchChip className="w-28">Pesquisar…</SearchChip></>} filtro="Filtros · Últimos 7 dias" primary="Nova Proposta" />
+      <FilterBar left={<><SelectChip className={hide}>CPF Cliente</SelectChip><SearchChip className="w-28">Pesquisar…</SearchChip></>} filtro="Filtros · Últimos 7 dias" />
       <Card className="mb-2.5 flex items-center gap-3 p-2.5">
         <Rosca slices={[{ v: 52, cor: val.verde }, { v: 44, cor: val.ambar }, { v: 32, cor: val.cinza }]} centro="128" legenda="propostas" size={58} />
         <div className="grid min-w-0 flex-1 grid-cols-2 gap-x-3 gap-y-1.5 sm:grid-cols-4">
@@ -113,7 +114,7 @@ function Clientes() {
       link="Clientes"
       label="Tela de Clientes do eCorban: tabela de clientes por CPF com os ícones de cadastro e a agenda de atendimentos."
     >
-      <FilterBar left={<SearchChip className="w-36 sm:w-44">Buscar por nome, CPF ou telefone</SearchChip>} primary="Novo Cliente" />
+      <FilterBar left={<SearchChip className="w-36 sm:w-44">Buscar por nome, CPF ou telefone</SearchChip>} />
       <Card>
         <DataTable
           cols={[{ h: "Foto" }, { h: "Nome" }, { h: "CPF", className: hide }, { h: "Nascimento", className: hide }, { h: "Cidade", className: "hidden xl:table-cell" }, { h: "Cadastros" }]}
@@ -159,10 +160,10 @@ function Campanhas() {
   ] as const;
   return (
     <SystemFrame tela="Campanhas de Telemarketing" abas={["Home", "Central de Atendimento"]} label="Tela de Campanhas de Telemarketing do eCorban com o progresso de cada campanha e a Central de Atendimento para sortear o próximo cliente.">
-      <FilterBar left={<SearchChip className="w-28">Buscar campanha</SearchChip>} primary="Nova Campanha" />
+      <FilterBar left={<SearchChip className="w-28">Buscar campanha</SearchChip>} />
       <Card>
         <DataTable
-          cols={[{ h: "Campanha" }, { h: "Usuários" }, { h: "Clientes", right: true, className: hide }, { h: "Progresso" }, { h: "Criado em", className: "hidden xl:table-cell" }, { h: "", className: hide }]}
+          cols={[{ h: "Campanha" }, { h: "Usuários", className: hide }, { h: "Clientes", right: true, className: hide }, { h: "Progresso" }, { h: "Criado em", className: "hidden xl:table-cell" }, { h: "", className: hide }]}
           rows={camp.map(([nome, u, c, feitos]) => {
             const pct = Math.round((feitos / c) * 100);
             return [
@@ -182,15 +183,21 @@ function Campanhas() {
           })}
         />
       </Card>
-      {/* Central de Atendimento, sobreposta à lista */}
-      <div className="relative mx-auto mt-2.5 w-full max-w-[290px] rounded-lg bg-white p-3 text-center shadow-[0_18px_40px_-12px_rgba(17,24,39,.45)] ring-1 ring-[#e5e7eb] sm:-mt-3">
-        <span className="mx-auto grid size-8 place-items-center rounded-full bg-[#2751c5]/10 text-[#2751c5]">
-          <PhoneIcon className="size-4" />
-        </span>
-        <div className="mt-1.5 text-[12px] font-bold text-[#111827]">Central de Atendimento</div>
-        <div className={`mt-0.5 text-[9.5px] leading-snug ${t.sub}`}>Escolha a campanha e sorteie o próximo cliente para atendimento.</div>
-        <SelectChip className="mt-2 w-full justify-between">INSS Novo · Outubro (92 disponíveis)</SelectChip>
-        <div className="mt-2 rounded-md bg-[#2751c5] py-1.5 text-[10.5px] font-semibold text-white">Sortear cliente</div>
+      {/* Central de Atendimento: faixa larga logo abaixo da lista, sem sobra de espaço na tela */}
+      <div className="mt-2.5 flex flex-col gap-2.5 rounded-lg bg-white p-3 shadow-[0_10px_28px_-14px_rgba(17,24,39,.4)] ring-1 ring-[#e5e7eb] sm:flex-row sm:items-center">
+        <div className="flex min-w-0 flex-1 items-center gap-2.5">
+          <span className="grid size-8 shrink-0 place-items-center rounded-full bg-[#2751c5]/10 text-[#2751c5]">
+            <PhoneIcon className="size-4" />
+          </span>
+          <span className="min-w-0">
+            <span className="block text-[12px] font-bold text-[#111827]">Central de Atendimento</span>
+            <span className={`block text-[9.5px] leading-snug ${t.sub}`}>Escolha a campanha e sorteie o próximo cliente para atendimento.</span>
+          </span>
+        </div>
+        <div className="flex shrink-0 items-center gap-1.5">
+          <SelectChip className="min-w-0 flex-1 justify-between sm:w-[178px] sm:flex-none">INSS Novo · Outubro (92 disponíveis)</SelectChip>
+          <span className="rounded-md bg-[#2751c5] px-3 py-1.5 text-[10.5px] font-semibold whitespace-nowrap text-white">Sortear cliente</span>
+        </div>
       </div>
     </SystemFrame>
   );
@@ -220,7 +227,7 @@ function Metas() {
   const ritmo = 81; // dia útil 17 de 21
   return (
     <SystemFrame tela="Metas e Projeções" abas={["Home", "Dashboard"]} label="Tela de Metas e Projeções do eCorban: meta total de outubro em 87%, acima do ritmo, e o progresso de cada vendedor.">
-      <FilterBar left={<><SelectChip><CalendarDaysIcon className="mr-0.5 inline size-3" />Outubro de 2026</SelectChip><SelectChip className={hide}>Campanha Vendedores</SelectChip></>} filtro={null} primary="Consultar" plus={false} hora={false} />
+      <FilterBar left={<><SelectChip><CalendarDaysIcon className="mr-0.5 inline size-3" />Outubro de 2026</SelectChip><SelectChip className={hide}>Campanha Vendedores</SelectChip></>} filtro={null} primary="Consultar" plus={false} />
       <Card title="Total · Campanha Outubro" right="12 vendedores" className="mb-2.5">
         <div className="p-2.5">
           <div className="flex items-end justify-between gap-2">
@@ -260,49 +267,198 @@ function Metas() {
   );
 }
 
-/* 5 · Dashboard: 4 KPIs + pizza Situação Atual + barras Top Vendedores com o toggle Barras | Pizza */
-function Relatorios() {
+/*
+ * 5 · Relatórios: três telas reais que se revezam sozinhas a cada 5,5 s (a aba ativa acompanha):
+ * Rankings Diversos (ranking de bancos + detalhamento), Desempenho por Período (linhas por vendedor + produção
+ * diária) e Calendário de Produção (o mês dia a dia). Com "reduzir movimento" fica parado na primeira.
+ * Números do mês batem com o resto do site: R$ 522.000,00 de Valor Base, 128 propostas, R$ 36.540,00 de comissão.
+ */
+const RELATORIOS = ["Rankings Diversos", "Desempenho por Período", "Calendário de Produção"] as const;
+
+const ranking = [
+  { nome: "PAN", qtde: 41, base: "R$ 168.400,00", com: "R$ 11.788,00", v: 168.4, cor: "#2a78d6" },
+  { nome: "C6", qtde: 33, base: "R$ 132.900,00", com: "R$ 9.303,00", v: 132.9, cor: "#22c55e" },
+  { nome: "Facta", qtde: 24, base: "R$ 97.300,00", com: "R$ 6.811,00", v: 97.3, cor: "#f97316" },
+  { nome: "Crefaz", qtde: 18, base: "R$ 71.600,00", com: "R$ 5.012,00", v: 71.6, cor: "#8b5cf6" },
+  { nome: "QualiBanking", qtde: 12, base: "R$ 51.800,00", com: "R$ 3.626,00", v: 51.8, cor: "#14b8a6" },
+];
+
+function BarrasPizza() {
   return (
-    <SystemFrame tela="Dashboard" abas={["Home", "Propostas"]} link="Dashboard" label="Dashboard do eCorban: propostas cadastradas, pagas, não pagas e canceladas, pizza da situação atual e ranking dos vendedores.">
-      <FilterBar left={<SelectChip>01/10/2026 – 31/10/2026</SelectChip>} hora />
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        <KpiCard label="Propostas Cadastradas" value="R$ 1.284.600,00" sub="128 propostas" color={val.azul} />
-        <KpiCard label="Propostas Pagas" value="R$ 702.300,00" sub="52 propostas" color={val.verde} />
-        <KpiCard label="Não Pagas" value="R$ 368.300,00" sub="44 propostas" color={val.ambar} />
-        <KpiCard label="Canceladas" value="R$ 214.000,00" sub="32 propostas" color={val.cinza} />
-      </div>
-      <div className="mt-2.5 grid gap-2.5 sm:grid-cols-2">
-        <Card title="Propostas — Situação Atual" className="max-sm:hidden">
-          <div className="flex items-center gap-3 p-2.5">
-            <Pie slices={[{ v: 58, cor: val.verde }, { v: 30, cor: val.ambar }, { v: 12, cor: val.vermelho }]} size={78} />
-            <ul className="flex min-w-0 flex-col gap-1 text-[9.5px] text-[#111827]">
-              {[["Pago", val.verde], ["Em andamento", val.ambar], ["Pendente", val.vermelho]].map(([l, c]) => (
-                <li key={l} className="flex items-center gap-1.5"><span className="size-2 shrink-0 rounded-sm" style={{ background: c }} />{l}</li>
-              ))}
-            </ul>
+    <span className="inline-flex overflow-hidden rounded-md text-[8.5px] font-semibold ring-1 ring-[#d1d5db]">
+      <span className="bg-[#2751c5] px-1.5 py-0.5 text-white">Barras</span>
+      <span className="px-1.5 py-0.5">Pizza</span>
+    </span>
+  );
+}
+
+function RankingsDiversos() {
+  return (
+    <>
+      <Card title="Ranking de Bancos" right={<BarrasPizza />} className="mb-2.5">
+        <div className="px-2.5 pt-1.5 pb-2">
+          <div className={`mb-1.5 text-[8.5px] ${t.sub}`}>01/10/2026 – 31/10/2026 · Valor Base</div>
+          <VBars h={58} items={ranking.map((r) => ({ nome: r.nome, v: r.v, rotulo: `R$ ${String(r.v).replace(".", ",")} mil`, cor: r.cor }))} />
+        </div>
+      </Card>
+      <Card title="Detalhamento do Relatório">
+        <DataTable
+          cols={[{ h: "#", className: hide }, { h: "Nome" }, { h: "Qtde", right: true }, { h: "Valor Base", right: true }, { h: "Comissão", right: true, className: hide }]}
+          rowClassName={(i) => (i > 2 ? "max-sm:hidden" : "")}
+          rows={ranking.map((r, i) => [i + 1, <b key="n">{r.nome}</b>, r.qtde, <span key="b" className="whitespace-nowrap">{r.base}</span>, <span key="c" className="whitespace-nowrap">{r.com}</span>])}
+          total={["", "Total", 128, <span key="t" className="whitespace-nowrap">R$ 522.000,00</span>, <span key="c" className="whitespace-nowrap">R$ 36.540,00</span>]}
+        />
+      </Card>
+    </>
+  );
+}
+
+// Valor Base mensal por vendedor (em mil), de maio a outubro
+const desempenho = [
+  { nome: "Marina Souza", cor: "#ec4899", v: [38, 44, 41, 50, 47, 56] },
+  { nome: "Rafael Nunes", cor: "#14b8a6", v: [35, 39, 46, 42, 45, 49] },
+  { nome: "Diego Lima", cor: "#3b82f6", v: [30, 36, 33, 40, 38, 43] },
+  { nome: "Paula Rocha", cor: "#f59e0b", v: [28, 25, 31, 27, 30, 32] },
+];
+const meses = ["05/2026", "06/2026", "07/2026", "08/2026", "09/2026", "10/2026"];
+// Produção diária dos 17 dias úteis de outubro até hoje (propostas por dia; 128 no total)
+const porDia = [6, 8, 7, 9, 5, 8, 7, 6, 8, 10, 7, 9, 6, 8, 7, 8, 9];
+const diasUteis = [1, 2, 5, 6, 7, 8, 9, 13, 14, 15, 16, 19, 20, 21, 22, 23, 26];
+
+function DesempenhoPorPeriodo() {
+  const W = 300, H = 104, L = 26, B = 14, max = 60;
+  const x = (i: number) => L + (i * (W - L - 6)) / (meses.length - 1);
+  const y = (v: number) => H - B - (v / max) * (H - B - 6);
+  const maxDia = Math.max(...porDia);
+  return (
+    <>
+      <Card title="Desempenho de Vendedores" className="mb-2.5">
+        <div className="px-2.5 pt-1.5 pb-2">
+          <div className={`text-[8.5px] ${t.sub}`}>
+            05/2026 – 10/2026 · Valor Base · <span className="text-[#2751c5]">Comparativo</span>
           </div>
-        </Card>
-        <Card
-          title="Top Vendedores — Valor Base"
-          right={
-            <span className="inline-flex overflow-hidden rounded-md text-[8.5px] font-semibold ring-1 ring-[#d1d5db]">
-              <span className="bg-[#2751c5] px-1.5 py-0.5 text-white">Barras</span>
-              <span className="px-1.5 py-0.5">Pizza</span>
+          <svg viewBox={`0 0 ${W} ${H}`} className="mt-1 w-full" aria-hidden="true">
+            {[0, 20, 40, 60].map((g) => (
+              <g key={g}>
+                <line x1={L} x2={W - 4} y1={y(g)} y2={y(g)} stroke="#e5e7eb" strokeWidth="0.6" />
+                <text x={L - 3} y={y(g) + 2} textAnchor="end" fontSize="5.5" fill="#9ca3af">
+                  {g ? `${g} mil` : "R$ 0"}
+                </text>
+              </g>
+            ))}
+            {meses.map((m, i) => (
+              <text key={m} x={x(i)} y={H - 3} textAnchor={i === meses.length - 1 ? "end" : i === 0 ? "start" : "middle"} fontSize="5.5" fill="#9ca3af">
+                {m}
+              </text>
+            ))}
+            {desempenho.map((d) => (
+              <g key={d.nome}>
+                <polyline points={d.v.map((v, i) => `${x(i)},${y(v)}`).join(" ")} fill="none" stroke={d.cor} strokeWidth="1.4" strokeLinejoin="round" />
+                {d.v.map((v, i) => (
+                  <circle key={i} cx={x(i)} cy={y(v)} r="1.8" fill={d.cor} />
+                ))}
+              </g>
+            ))}
+          </svg>
+          <div className="mt-1 flex flex-wrap justify-center gap-x-3 gap-y-0.5 text-[8.5px] text-[#4b5563]">
+            {desempenho.map((d) => (
+              <span key={d.nome} className="flex items-center gap-1">
+                <span className="size-1.5 rounded-full" style={{ background: d.cor }} />
+                {d.nome}
+              </span>
+            ))}
+          </div>
+        </div>
+      </Card>
+      <Card title="Produção diária" right={<span className="max-sm:hidden">Total do período: <b className="text-[#111827]">R$ 522.000,00</b> (128 propostas)</span>}>
+        <div className="flex h-[62px] items-end gap-[3px] px-2.5 pt-2 pb-1">
+          {porDia.map((n, i) => (
+            <span key={i} className="flex min-w-0 flex-1 flex-col items-center gap-0.5">
+              <span className="w-full rounded-t-[2px] bg-[#6184e5]" style={{ height: (n / maxDia) * 38 }} />
+              <span className="text-[6.5px] text-[#9ca3af] tabular-nums">{String(diasUteis[i]).padStart(2, "0")}</span>
             </span>
-          }
-        >
-          <div className="px-2.5 pt-2.5 pb-2">
-            <VBars
-              h={56}
-              items={[
-                { nome: "Marina", v: 56, rotulo: "R$ 56 mil" },
-                { nome: "Rafael", v: 49, rotulo: "R$ 49 mil" },
-                { nome: "Diego", v: 43, rotulo: "R$ 43 mil" },
-                { nome: "Paula", v: 32, rotulo: "R$ 32 mil" },
-              ]}
-            />
+          ))}
+        </div>
+      </Card>
+    </>
+  );
+}
+
+const brlCurto = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+function CalendarioDeProducao() {
+  // Outubro de 2026 começa numa quinta: 4 dias de setembro antes, 35 casas no total. Dia 12 é feriado; hoje é 26.
+  const producao = new Map(diasUteis.map((d, i) => [d, porDia[i]]));
+  const casas = Array.from({ length: 35 }, (_, i) => i - 3);
+  return (
+    <Card className="flex flex-1 flex-col">
+      <div className="flex items-center justify-between px-2.5 pt-2">
+        <span className={`grid size-5 place-items-center rounded-md ring-1 ring-[#e5e7eb] ${t.sub}`}>‹</span>
+        <span className="text-center">
+          <span className="block text-[10.5px] font-bold text-[#111827]">OUTUBRO DE 2026</span>
+          <span className={`block text-[8px] ${t.sub}`}>Valor Base · Propostas válidas</span>
+        </span>
+        <span className={`grid size-5 place-items-center rounded-md ring-1 ring-[#e5e7eb] ${t.sub}`}>›</span>
+      </div>
+      <div className="mt-2 grid flex-1 auto-rows-fr grid-cols-7 grid-rows-[auto] border-t border-[#e5e7eb] text-center">
+        {["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"].map((d) => (
+          <span key={d} className={`py-1 text-[7.5px] font-semibold ${t.sub}`}>
+            {d}
+          </span>
+        ))}
+        {casas.map((dia, i) => {
+          const fora = dia < 1;
+          const n = producao.get(dia);
+          const fimDeSemana = i % 7 === 0 || i % 7 === 6;
+          const hoje = dia === 26;
+          return (
+            <span key={i} className={`relative min-h-[34px] border-t border-l border-[#f3f4f6] px-1 pt-0.5 text-left ${fora ? "bg-[#f9fafb]" : ""} ${i % 7 === 0 ? "border-l-0" : ""}`}>
+              <span
+                className={`absolute top-0.5 right-1 grid size-3.5 place-items-center rounded-full text-[7.5px] tabular-nums ${hoje ? "bg-[#2751c5] font-bold text-white" : fora ? "text-[#d1d5db]" : "text-[#6b7280]"}`}
+              >
+                {fora ? 26 + dia + 4 : dia}
+              </span>
+              {n !== undefined && (
+                <span className="absolute bottom-0.5 left-1 leading-tight">
+                  <span className="block text-[6.5px] text-[#6b7280]">{n} prop.</span>
+                  <b className="hidden text-[7px] text-[#111827] tabular-nums sm:block">{brlCurto(Math.round(n * 4078.125))}</b>
+                </span>
+              )}
+              {dia === 12 && <span className="absolute bottom-0.5 left-1 text-[6.5px] text-[#9ca3af]">0 prop.</span>}
+              {!fora && !fimDeSemana && dia > 26 && <span className="absolute bottom-1 left-1 h-1 w-4 rounded-full bg-[#f3f4f6]" />}
+            </span>
+          );
+        })}
+      </div>
+    </Card>
+  );
+}
+
+function Relatorios() {
+  const [v, setV] = useState(0);
+  const reduce = useReducedMotion();
+  useEffect(() => {
+    if (reduce) return;
+    const id = setInterval(() => setV((x) => (x + 1) % RELATORIOS.length), 5500);
+    return () => clearInterval(id);
+  }, [reduce]);
+  return (
+    <SystemFrame
+      tela={RELATORIOS[v]}
+      abas={[...RELATORIOS]}
+      label="Relatórios do eCorban que se revezam: Rankings Diversos com o ranking de bancos e o detalhamento por valor e comissão, Desempenho por Período com a evolução de cada vendedor e a produção diária, e o Calendário de Produção do mês."
+    >
+      <FilterBar left={<SelectChip>01/10/2026 – 31/10/2026</SelectChip>} filtro="Alterar filtros" />
+      {/* As 3 telas ficam empilhadas na mesma célula: a altura é a da maior e nada abaixo "pula" quando trocam */}
+      <div className="grid">
+        {[RankingsDiversos, DesempenhoPorPeriodo, CalendarioDeProducao].map((Tela, i) => (
+          <div
+            key={RELATORIOS[i]}
+            className={`flex flex-col transition-[opacity,translate] duration-300 [grid-area:1/1] ${i === v ? "opacity-100" : "invisible translate-y-1.5 opacity-0"}`}
+          >
+            <Tela />
           </div>
-        </Card>
+        ))}
       </div>
     </SystemFrame>
   );
@@ -346,7 +502,7 @@ function Financeiro() {
   ];
   return (
     <SystemFrame tela="Lançamentos Financeiros" abas={["Home", "Contas a Pagar"]} label="Lançamentos Financeiros do eCorban: dinheiro recebido, despesas e saldo, com comissões e repasses lançados automaticamente.">
-      <FilterBar left={<SearchChip className="w-32">Pesquisar por descrição…</SearchChip>} primary="Novo Lançamento" />
+      <FilterBar left={<SearchChip className="w-32">Pesquisar por descrição…</SearchChip>} />
       <div className="mb-2.5 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5">
         <MiniKpiTile icon={ArrowTrendingUpIcon} label="Dinheiro recebido" value="R$ 18.400,00" color="#16a34a" sub="🔒 Comissões" />
         <MiniKpiTile icon={ClockIcon} label="Total a receber" value="R$ 9.600,00" color={val.azul} className={hide} />
@@ -387,7 +543,7 @@ function Simulacoes() {
           </span>
         ))}
       </div>
-      <FilterBar left={<SearchChip className="w-40">Nome ou CPF… (Enter pra buscar)</SearchChip>} filtro={null} primary="Nova Simulação" />
+      <FilterBar left={<SearchChip className="w-40">Nome ou CPF… (Enter pra buscar)</SearchChip>} filtro={null} />
       <Card>
         <DataTable
           cols={[{ h: "Cliente" }, { h: "Tipo", className: hide }, { h: "Valor / Prazo", className: hide }, { h: "Condição", className: "hidden xl:table-cell" }, { h: "Esteira", right: true }]}
