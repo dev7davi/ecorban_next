@@ -35,7 +35,7 @@ export function PhoneMockup() {
   const aviso = avisos[k];
 
   return (
-    <div aria-hidden="true" className="relative w-[290px] rounded-[46px] bg-[#0b1220] p-[9px] shadow-[0_40px_80px_-30px_rgba(6,20,50,.75)] ring-1 ring-white/10">
+    <div aria-hidden="true" className="relative w-[320px] rounded-[46px] bg-[#0b1220] p-[9px] shadow-[0_40px_80px_-30px_rgba(6,20,50,.75)] ring-1 ring-white/10">
       {/* Botões laterais */}
       <span className="absolute top-28 -left-[3px] h-10 w-[3px] rounded-l bg-[#1e293b]" />
       <span className="absolute top-44 -left-[3px] h-14 w-[3px] rounded-l bg-[#1e293b]" />

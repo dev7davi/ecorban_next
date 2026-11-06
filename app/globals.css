@@ -298,3 +298,14 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Abertura da primeira visita (components/motion/Splash.tsx): só aparece com html[data-splash=on] */
+#splash {
+  display: none;
+}
+html[data-splash="on"] #splash {
+  display: grid;
+}
+html[data-splash="on"] body {
+  overflow: hidden;
+}

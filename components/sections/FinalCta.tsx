@@ -9,12 +9,13 @@ const bullets = ["7 dias de acesso completo a todos os módulos", "Migração da
 
 /**
  * Fecha a página: painel azul arredondado com o texto à esquerda e, à direita, um celular com o sistema se mexendo.
- * O celular sai por cima do painel e é cortado na base dele (a coluna do celular tem overflow-hidden e sobe além do topo).
+ * O painel ocupa quase a largura toda da tela. O celular mostra 2/3 dele; o 1/3 de baixo fica "dentro" do painel
+ * (a coluna do celular tem overflow-hidden e o celular desce 1/3 da própria altura).
  */
 export function FinalCta() {
   return (
-    <section className="px-[19px] pt-24 pb-16 sm:px-8 sm:pt-32 sm:pb-24">
-      <div className="relative mx-auto max-w-6xl">
+    <section className="px-[19px] py-16 sm:px-8 sm:py-24 lg:px-[3vw]">
+      <div className="relative mx-auto max-w-[1600px]">
         {/* Painel com o fundo, o círculo grande atrás do celular e os anéis */}
         <div aria-hidden="true" className="absolute inset-0 overflow-hidden rounded-[32px] bg-linear-to-br from-brand-600 via-brand-700 to-brand-900 shadow-[0_40px_80px_-40px_rgba(15,28,61,.7)]">
           <div className="absolute -right-24 -bottom-40 size-[560px] rounded-full bg-white/[.07] max-lg:top-[46%] max-lg:right-1/2 max-lg:translate-x-1/2 lg:right-[2%] lg:-bottom-56" />
@@ -24,7 +25,7 @@ export function FinalCta() {
         </div>
 
         <div className="relative grid lg:grid-cols-[1.15fr_1fr]">
-          <Reveal className="flex flex-col items-start px-6 pt-12 pb-10 sm:px-12 sm:pt-14 lg:py-16 lg:pr-4 lg:pl-14">
+          <Reveal className="flex flex-col items-start px-6 pt-12 pb-10 sm:px-12 sm:pt-14 lg:py-20 lg:pr-4 lg:pl-[clamp(56px,6vw,120px)]">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white ring-1 ring-white/20 backdrop-blur">
               <span className="size-1.5 rounded-full bg-pipe-averbado" />
               Teste grátis por 7 dias
@@ -56,9 +57,9 @@ export function FinalCta() {
             </div>
           </Reveal>
 
-          {/* Celular: sobe além do topo do painel e é cortado na base dele */}
-          <div className="relative flex h-[420px] justify-center overflow-hidden rounded-b-[32px] sm:h-[460px] lg:-mt-16 lg:h-auto lg:rounded-none">
-            <div className="pt-2 lg:pt-0">
+          {/* Celular: 2/3 à mostra, o 1/3 de baixo escondido dentro do painel */}
+          <div className="relative h-[500px] overflow-hidden max-[420px]:h-[420px] rounded-b-[32px] lg:h-auto lg:min-h-[520px] lg:rounded-br-[32px] lg:rounded-bl-none">
+            <div className="absolute bottom-0 left-1/2 origin-bottom -translate-x-1/2 translate-y-1/3 max-[420px]:scale-[0.84]">
               <PhoneMockup />
             </div>
           </div>

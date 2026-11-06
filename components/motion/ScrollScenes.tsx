@@ -26,7 +26,12 @@ export function ScrollScenes() {
     const mm = gsap.matchMedia();
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      hero();
+      // Na primeira visita, a entrada do herói espera a abertura (Splash) terminar
+      const intro = hero();
+      if (root.dataset.splash === "on") {
+        intro.pause();
+        window.addEventListener("ecorban:splash-done", () => intro.play(), { once: true });
+      }
       splits();
       reveals();
       stack();
@@ -67,6 +72,8 @@ function hero() {
       scrollTrigger: { trigger: "#topo", start: "top top", end: "bottom top", scrub: true },
     });
   });
+
+  return tl;
 }
 
 function splits() {
