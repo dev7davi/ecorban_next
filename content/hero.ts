@@ -3,7 +3,7 @@ export const hero = {
   titleStart: "Gestão eficiente para o seu",
   titleHighlight: "Corban",
   subtitle:
-    "Do primeiro contato ao repasse pago, a nova versão do eCorban organiza a esteira de propostas, o atendimento, as metas e as comissões da sua operação de consignado em um só lugar.",
+    "O que você já conhecia no eCorban está ainda melhor. Do primeiro contato ao repasse pago, a nova versão organiza a esteira de propostas, o atendimento, as metas e as comissões da sua operação de consignado em um só lugar.",
   lead: {
     placeholder: "Nome do seu Corban",
     button: "Começar teste grátis",

@@ -1,5 +1,5 @@
 import { CheckIcon } from "@heroicons/react/24/outline";
-import { PhoneMockup } from "@/components/mockups/PhoneMockup";
+import { PhoneStage } from "@/components/mockups/PhoneMockup";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { Ring } from "@/components/ui/Ring";
@@ -9,8 +9,8 @@ const bullets = ["7 dias de acesso completo a todos os módulos", "Migração da
 
 /**
  * Fecha a página: painel azul arredondado com o texto à esquerda e, à direita, um celular com o sistema se mexendo.
- * O painel ocupa quase a largura toda da tela. O celular mostra 2/3 dele; o 1/3 de baixo fica "dentro" do painel
- * (a coluna do celular tem overflow-hidden e o celular desce 1/3 da própria altura).
+ * O painel ocupa quase a largura toda da tela. O celular (PhoneStage) ocupa cerca de 1/3 do painel, sai por cima da borda
+ * de cima e é cortado na borda de baixo.
  */
 export function FinalCta() {
   return (
@@ -24,8 +24,8 @@ export function FinalCta() {
           <Ring size={220} thickness={36} tone="onphoto" className="-bottom-24 left-[38%] max-lg:hidden" />
         </div>
 
-        <div className="relative grid lg:grid-cols-[1.15fr_1fr]">
-          <Reveal className="flex flex-col items-start px-6 pt-12 pb-10 sm:px-12 sm:pt-14 lg:py-20 lg:pr-4 lg:pl-[clamp(56px,6vw,120px)]">
+        <div className="relative grid lg:grid-cols-[1.15fr_1fr] xl:flex">
+          <Reveal className="flex flex-col items-start px-6 pt-12 pb-10 sm:px-12 sm:pt-14 lg:py-20 lg:pr-4 lg:pl-[clamp(56px,6vw,120px)] xl:w-[calc(clamp(56px,6vw,120px)+465px)] xl:shrink-0 xl:pr-0">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white ring-1 ring-white/20 backdrop-blur">
               <span className="size-1.5 rounded-full bg-pipe-averbado" />
               Teste grátis por 7 dias
@@ -33,11 +33,7 @@ export function FinalCta() {
             <h2 data-split className="mt-5 text-[clamp(30px,4vw,48px)] leading-[1.1] font-semibold tracking-[-0.02em] text-balance text-white">
               Pronto para organizar a sua operação?
             </h2>
-            <p className="mt-5 max-w-lg text-[17px] text-pretty text-brand-100">
-              Converse com quem entende de Corban. A gente mostra a nova versão com a sua realidade e ajuda a trazer a sua base de clientes e propostas por
-              planilha.
-            </p>
-            <ul className="mt-6 flex flex-col gap-2.5">
+            <ul className="mt-7 flex flex-col gap-2.5">
               {bullets.map((b) => (
                 <li key={b} className="flex items-start gap-2.5 text-[15px] font-medium text-white">
                   <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-white/15 ring-1 ring-white/30">
@@ -57,12 +53,8 @@ export function FinalCta() {
             </div>
           </Reveal>
 
-          {/* Celular: 2/3 à mostra, o 1/3 de baixo escondido dentro do painel */}
-          <div className="relative h-[500px] overflow-hidden max-[420px]:h-[420px] rounded-b-[32px] lg:h-auto lg:min-h-[520px] lg:rounded-br-[32px] lg:rounded-bl-none">
-            <div className="absolute bottom-0 left-1/2 origin-bottom -translate-x-1/2 translate-y-1/3 max-[420px]:scale-[0.84]">
-              <PhoneMockup />
-            </div>
-          </div>
+          {/* Celular grande: a ponta de cima sai do painel e a base é cortada na borda de baixo (clip-path só embaixo) */}
+          <PhoneStage />
         </div>
       </div>
     </section>

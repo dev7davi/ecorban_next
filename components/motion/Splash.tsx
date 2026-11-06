@@ -24,7 +24,7 @@ export function Splash() {
     const html = document.documentElement;
     // Quem já visitou: a cortina fica no DOM, mas escondida pelo CSS (html sem data-splash=on)
     if (html.dataset.splash !== "on") return;
-    const t = setTimeout(() => setAtivo(false), reduzir ? 700 : 2100);
+    const t = setTimeout(() => setAtivo(false), reduzir ? 900 : 2900);
     return () => clearTimeout(t);
   }, [reduzir]);
 
@@ -75,13 +75,23 @@ export function Splash() {
               />
             </motion.svg>
 
+            {/* Frase de apresentação, entra depois que o "E" se desenha */}
+            <motion.p
+              className="-mt-1 max-w-[260px] px-4 text-center text-[13px] font-medium tracking-wide text-white/75"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.1 }}
+            >
+              O que antes era bom, está ainda melhor!
+            </motion.p>
+
             {/* Linha de carregamento */}
             <span className="h-[3px] w-28 overflow-hidden rounded-full bg-white/15">
               <motion.span
                 className="block h-full origin-left rounded-full bg-[#29b37a]"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
-                transition={{ duration: 1.8, ease: [0.33, 1, 0.68, 1] }}
+                transition={{ duration: 2.6, ease: [0.33, 1, 0.68, 1] }}
               />
             </span>
           </motion.div>

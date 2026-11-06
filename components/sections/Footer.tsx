@@ -11,7 +11,7 @@ export function Footer() {
       <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[5fr_7fr]">
         <div className="rounded-2xl bg-linear-to-br from-brand-900 to-brand-950 p-7 ring-1 ring-white/10">
           <h2 className="text-xl font-semibold text-white">Fale com um especialista</h2>
-          <p className="mt-2 text-neutral-300">Conte como é a sua operação e a gente mostra o eCorban funcionando nela.</p>
+          <p className="mt-2 text-neutral-300">Conte como é a sua operação e a gente mostra a nova versão funcionando nela, ainda melhor.</p>
           <Button href={whatsappLink()} external arrow className="mt-6 shadow-none">
             Chamar no WhatsApp
           </Button>

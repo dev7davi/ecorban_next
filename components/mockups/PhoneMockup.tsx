@@ -3,7 +3,7 @@
 import { BanknotesIcon, CheckCircleIcon, DocumentCheckIcon, FlagIcon, HomeIcon, PresentationChartBarIcon, QueueListIcon, UserIcon } from "@heroicons/react/24/solid";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PROPOSTAS, StatusPill } from "@/components/mock/system";
 
 // Os números do mês batem com os cards do herói (52 pagas, R$ 36,5 mil, R$ 522.000,00 = 87% da meta).
@@ -66,7 +66,7 @@ export function PhoneMockup() {
         </div>
 
         {/* Aviso que desce do topo */}
-        <div className="pointer-events-none absolute inset-x-3 top-[52px] z-30 h-14">
+        <div className="pointer-events-none absolute inset-x-3 top-[48px] z-30 h-14">
           <AnimatePresence mode="wait">
             <motion.div
               key={k}
@@ -87,14 +87,15 @@ export function PhoneMockup() {
           </AnimatePresence>
         </div>
 
-        <div className="px-4 pt-[46px]">
-          <p className="text-[11px] text-[#6b7280]">Olá,</p>
-          <p className="text-[17px] leading-tight font-bold">Marina Souza</p>
+        <div className="px-4 pt-[24px]">
+          <p className="text-[10.5px] text-[#6b7280]">
+            Olá, <b className="text-[13px] font-bold text-[#111827]">Marina Souza</b>
+          </p>
 
           {/* Seletor de período */}
-          <div className="relative mt-3 grid grid-cols-3 rounded-full bg-white p-1 text-center text-[11px] font-semibold ring-1 ring-black/5">
+          <div className="relative mt-1.5 grid grid-cols-3 rounded-full bg-white p-0.5 text-center text-[10px] font-semibold ring-1 ring-black/5">
             {periodos.map((x, i) => (
-              <span key={x.id} className={`relative z-10 py-1.5 transition-colors duration-300 ${i === k ? "text-white" : "text-[#6b7280]"}`}>
+              <span key={x.id} className={`relative z-10 py-1 transition-colors duration-300 ${i === k ? "text-white" : "text-[#6b7280]"}`}>
                 {i === k && <motion.span layoutId="periodo" className="absolute inset-0 -z-10 rounded-full bg-[#2751c5]" transition={{ type: "spring", stiffness: 380, damping: 32 }} />}
                 {x.id}
               </span>
@@ -102,43 +103,43 @@ export function PhoneMockup() {
           </div>
 
           {/* KPIs */}
-          <div className="mt-3 grid grid-cols-2 gap-2">
+          <div className="mt-1.5 grid grid-cols-2 gap-1.5">
             <Kpi icon={DocumentCheckIcon} cor="#16a34a" fundo="#dcfce7" rotulo="Propostas pagas" valor={p.pagas} k={k} />
             <Kpi icon={BanknotesIcon} cor="#d97706" fundo="#fef3c7" rotulo="Comissões" valor={p.comissoes} k={k} />
           </div>
 
           {/* Meta */}
-          <div className="mt-2 rounded-2xl bg-white p-3 ring-1 ring-black/5">
-            <div className="flex items-center justify-between text-[10.5px]">
+          <div className="mt-1.5 rounded-xl bg-white px-2.5 py-2 ring-1 ring-black/5">
+            <div className="flex items-center justify-between text-[9.5px]">
               <span className="flex items-center gap-1 font-semibold">
-                <FlagIcon className="size-3.5 text-[#2751c5]" /> Meta da empresa
+                <FlagIcon className="size-3 text-[#2751c5]" /> Meta da empresa
               </span>
               <AnimatePresence mode="wait">
-                <motion.b key={k} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="text-[15px] text-[#2751c5]">
+                <motion.b key={k} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="text-[12px] text-[#2751c5]">
                   {p.pct}%
                 </motion.b>
               </AnimatePresence>
             </div>
             <AnimatePresence mode="wait">
-              <motion.p key={k} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-0.5 text-[13px] font-bold tabular-nums">
+              <motion.p key={k} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-0.5 text-[11.5px] font-bold tabular-nums">
                 {p.producao} <span className="text-[10px] font-normal text-[#6b7280]">{p.meta}</span>
               </motion.p>
             </AnimatePresence>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#e5e7eb]">
+            <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[#e5e7eb]">
               <motion.div className="h-full rounded-full bg-linear-to-r from-[#22c55e] to-[#16a34a]" initial={false} animate={{ width: `${p.pct}%` }} transition={{ duration: 0.9, ease: [0.33, 1, 0.68, 1] }} />
             </div>
           </div>
 
           {/* Propostas recentes: a lista rola devagar */}
-          <div className="mt-3 flex items-center justify-between">
-            <b className="text-[12px]">Propostas recentes</b>
-            <span className="text-[10px] font-semibold text-[#2751c5]">Ver todas</span>
+          <div className="mt-2 flex items-center justify-between">
+            <b className="text-[11px]">Propostas recentes</b>
+            <span className="text-[9.5px] font-semibold text-[#2751c5]">Ver todas</span>
           </div>
-          <div className="mt-2 h-[232px] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_8%,#000_88%,transparent)]">
-            <div className="flex animate-scroll-y flex-col gap-2 motion-reduce:animate-none">
+          <div className="mt-1.5 h-[360px] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_8%,#000_88%,transparent)]">
+            <div className="flex animate-scroll-y flex-col gap-1.5 motion-reduce:animate-none">
               {[...lista, ...lista].map((x, i) => (
-                <div key={i} className="flex items-center gap-2.5 rounded-xl bg-white px-2.5 py-2 ring-1 ring-black/5">
-                  <span className="grid size-7 shrink-0 place-items-center rounded-full bg-[#eef2ff] text-[10px] font-bold text-[#2751c5]">
+                <div key={i} className="flex items-center gap-2 rounded-lg bg-white px-2 py-1.5 ring-1 ring-black/5">
+                  <span className="grid size-6 shrink-0 place-items-center rounded-full bg-[#eef2ff] text-[9px] font-bold text-[#2751c5]">
                     {x.nome
                       .split(" ")
                       .slice(0, 2)
@@ -146,14 +147,14 @@ export function PhoneMockup() {
                       .join("")}
                   </span>
                   <span className="min-w-0 flex-1 leading-tight">
-                    <b className="block truncate text-[11px]">{x.nome}</b>
-                    <span className="block truncate text-[9.5px] text-[#6b7280]">
+                    <b className="block truncate text-[10px]">{x.nome}</b>
+                    <span className="block truncate text-[8.5px] text-[#6b7280]">
                       #{x.id} · {x.produto}
                     </span>
                   </span>
                   <span className="flex shrink-0 flex-col items-end gap-0.5">
-                    <b className="text-[10.5px] tabular-nums">{x.valor}</b>
-                    <StatusPill s={x.status} className="max-w-[86px] px-1.5! py-0! text-[8.5px]!" />
+                    <b className="text-[9.5px] tabular-nums">{x.valor}</b>
+                    <StatusPill s={x.status} className="max-w-[80px] px-1.5! py-0! text-[8px]!" />
                   </span>
                 </div>
               ))}
@@ -177,16 +178,51 @@ export function PhoneMockup() {
 
 function Kpi({ icon: Icon, cor, fundo, rotulo, valor, k }: { icon: typeof HomeIcon; cor: string; fundo: string; rotulo: string; valor: string; k: number }) {
   return (
-    <div className="rounded-2xl bg-white p-3 ring-1 ring-black/5">
-      <span className="grid size-7 place-items-center rounded-full" style={{ background: fundo, color: cor }}>
-        <Icon className="size-4" />
+    <div className="flex items-center gap-2 rounded-xl bg-white px-2 py-1.5 ring-1 ring-black/5">
+      <span className="grid size-6 shrink-0 place-items-center rounded-full" style={{ background: fundo, color: cor }}>
+        <Icon className="size-3.5" />
       </span>
-      <AnimatePresence mode="wait">
-        <motion.b key={k} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }} className="mt-2 block text-[17px] leading-none tabular-nums">
-          {valor}
-        </motion.b>
-      </AnimatePresence>
-      <span className="mt-1 block text-[10px] text-[#6b7280]">{rotulo}</span>
+      <span className="min-w-0 leading-tight">
+        <AnimatePresence mode="wait">
+          <motion.b key={k} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.25 }} className="block truncate text-[12.5px] tabular-nums">
+            {valor}
+          </motion.b>
+        </AnimatePresence>
+        <span className="block truncate text-[8.5px] text-[#6b7280]">{rotulo}</span>
+      </span>
+    </div>
+  );
+}
+
+/**
+ * Palco do celular no CTA final. Mede a própria coluna e escala o celular (320 px de largura base) para ocupar ~60% dela
+ * no desktop (≈ 1/3 do painel), com a ponta de cima 18% da altura acima do painel. O clip-path corta só a base.
+ * No celular/tablet o aparelho entra pelo alto da coluna e a base também é cortada.
+ */
+export function PhoneStage() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [m, setM] = useState({ s: 1, top: 40, desktop: false });
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const medir = () => {
+      const w = el.clientWidth;
+      const h = el.clientHeight;
+      const desktop = window.matchMedia("(min-width: 1024px)").matches;
+      setM(desktop ? { s: Math.min(1.6, Math.max(1, (w * 0.6) / 320)), top: -h * 0.18, desktop } : { s: Math.min(1, (w - 24) / 320), top: 36, desktop });
+    };
+    medir();
+    const ro = new ResizeObserver(medir);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className="relative h-[460px] [clip-path:inset(-400px_0_0_0)] lg:h-auto lg:min-h-[420px] xl:min-w-0 xl:flex-1">
+      <div className="absolute left-1/2 origin-top" style={{ top: m.top, transform: `translateX(-50%) scale(${m.s})` }}>
+        <PhoneMockup />
+      </div>
     </div>
   );
 }

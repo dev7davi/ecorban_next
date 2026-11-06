@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     "A nova versão do eCorban, o CRM consignado para Corbans e correspondentes bancários: esteira de propostas, atendimento, metas, comissões e financeiro em um só lugar.",
   openGraph: {
     title: "eCorban — Gestão eficiente para Corbans",
-    description: "Esteira de propostas, atendimento, metas e comissões da sua operação de consignado em um só lugar.",
+    description: "O que antes era bom, está ainda melhor: esteira de propostas, atendimento, metas e comissões da sua operação de consignado em um só lugar.",
     locale: "pt_BR",
     type: "website",
     siteName: "eCorban",
