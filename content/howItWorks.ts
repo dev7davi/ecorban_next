@@ -2,7 +2,7 @@
 // Simulado → Digitada → Aguardando Formalização → Pendência Documentação → Averbado → Pago - Produtos.
 // `dark` marca a cor clara, que pede número escuro para ter contraste.
 export const steps = [
-  { title: "Simula no banco", text: "O vendedor compara condições do C6, PAN, Crefaz, Facta e QualiBanking sem sair do sistema.", color: "#fb923c" },
+  { title: "Simula no banco", text: "O vendedor compara as condições dos bancos integrados sem sair do sistema.", color: "#fb923c" },
   { title: "Digita a proposta", text: "Da simulação, um clique em “Enviar pra esteira”. O cliente é cadastrado por CPF na hora.", color: "#154ef9" },
   { title: "Status na esteira", text: "O status é atualizado na esteira, com o histórico de cada mudança.", color: "#f5d224", dark: true },
   { title: "Pendência? O sino avisa", text: "A proposta entra nas “Propostas em alerta” e quem precisa agir fica sabendo.", color: "#ef4444" },

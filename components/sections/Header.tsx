@@ -37,7 +37,7 @@ export function Header() {
     >
       <div className="mx-auto flex max-w-[clamp(1280px,90vw,1800px)] items-center justify-between gap-6 px-[19px] py-3.5 sm:px-8">
         <a href="#topo" aria-label="eCorban — início" className="shrink-0">
-          <Image src="/logo/logo_white.svg" alt="eCorban" width={138} height={22} preload />
+          <Image src="/logo/logo-branca.svg" alt="eCorban" width={138} height={21} preload />
         </a>
 
         <nav aria-label="Principal" className="hidden gap-5 text-[14px] font-medium whitespace-nowrap lg:flex xl:gap-7 xl:text-[15px]">

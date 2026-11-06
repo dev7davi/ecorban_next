@@ -1,6 +1,5 @@
 import {
   ArrowDownTrayIcon,
-  BoltIcon,
   CircleStackIcon,
   ClipboardDocumentCheckIcon,
   DocumentDuplicateIcon,
@@ -13,8 +12,7 @@ import {
 // saíram até a confirmação com o Adriano (§9).
 export const differentiators = [
   { title: "Dados isolados", text: "Um banco de dados por empresa.", icon: CircleStackIcon },
-  { title: "Tempo real", text: "A tela se atualiza sozinha.", icon: BoltIcon },
-  { title: "5 integrações bancárias", text: "PAN, C6, Crefaz, Facta e QualiBanking.", icon: LinkIcon },
+  { title: "5 integrações bancárias", text: "Bancos integrados no mesmo lugar.", icon: LinkIcon },
   { title: "Comissão versionada", text: "A tabela certa de cada época.", icon: DocumentDuplicateIcon },
   { title: "Permissões por função", text: "Grupos de acesso por tela e ação.", icon: LockClosedIcon },
   { title: "Auditoria legível", text: "Quem, quando e o que mudou.", icon: ClipboardDocumentCheckIcon },

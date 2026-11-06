@@ -1,11 +1,11 @@
 export const hero = {
-  badge: "Teste grátis por 7 dias",
-  titleStart: "Gestão eficiente para a sua",
-  titleHighlight: "promotora de crédito",
+  badge: "Nova versão: o que antes era bom, está ainda melhor!",
+  titleStart: "Gestão eficiente para o seu",
+  titleHighlight: "Corban",
   subtitle:
-    "Do primeiro contato ao repasse pago, o eCorban organiza a esteira de propostas, o atendimento, as metas e as comissões da sua operação de consignado — em um só lugar, em tempo real.",
+    "Do primeiro contato ao repasse pago, a nova versão do eCorban organiza a esteira de propostas, o atendimento, as metas e as comissões da sua operação de consignado em um só lugar.",
   lead: {
-    placeholder: "Nome da sua promotora",
+    placeholder: "Nome do seu Corban",
     button: "Começar teste grátis",
     message: (empresa: string) =>
       empresa ? `Olá, sou da ${empresa} e quero testar o eCorban por 7 dias.` : "Olá, quero testar o eCorban por 7 dias.",

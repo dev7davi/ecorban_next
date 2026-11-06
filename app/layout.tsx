@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: "eCorban — Sistema de gestão e CRM para correspondente bancário",
   description:
-    "CRM consignado para promotoras de crédito e correspondentes bancários: esteira de propostas, atendimento, metas, comissões e financeiro em um só lugar, em tempo real.",
+    "A nova versão do eCorban, o CRM consignado para Corbans e correspondentes bancários: esteira de propostas, atendimento, metas, comissões e financeiro em um só lugar.",
   openGraph: {
     title: "eCorban — Gestão eficiente para Corbans",
     description: "Esteira de propostas, atendimento, metas e comissões da sua operação de consignado em um só lugar.",

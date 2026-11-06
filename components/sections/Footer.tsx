@@ -52,7 +52,7 @@ export function Footer() {
       </div>
 
       <div className="mx-auto mt-14 flex max-w-6xl flex-col items-start justify-between gap-4 border-t border-neutral-800 pt-6 text-sm text-neutral-500 sm:flex-row sm:items-center">
-        <Image src="/logo/logo_white.svg" alt="eCorban" width={120} height={19} />
+        <Image src="/logo/logo-branca.svg" alt="eCorban" width={120} height={18} />
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <span>© {new Date().getFullYear()} eCorban · {site.tagline}</span>
           {/* TODO: ligar às páginas de Política de Privacidade e Termos de Uso */}

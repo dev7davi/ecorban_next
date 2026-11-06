@@ -69,6 +69,13 @@
   --animate-floaty: floaty 5s ease-in-out infinite;
   --animate-floaty-slow: floaty 6s ease-in-out -2s infinite;
   --animate-marquee: marquee 45s linear infinite;
+  --animate-scroll-y: scroll-y 16s linear infinite;
+
+  @keyframes scroll-y {
+    to {
+      transform: translateY(-50%);
+    }
+  }
 
   @keyframes marquee {
     to {

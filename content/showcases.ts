@@ -21,7 +21,7 @@ export const showcases: Showcase[] = [
     id: "tempo-real",
     pain: "Chega de cada um trabalhar de um jeito",
     title: "Veja a operação acontecendo, ao vivo",
-    text: "Com o Equipe ao Vivo você sabe quem está ativo, atendendo ou em pausa, a que horas chegou e quanto já produziu — a tela se atualiza sozinha, sem planilha de fim de dia. No Modo TV, o Dashboard vai para a TV e o escritório inteiro acompanha a meta junto.",
+    text: "Com o Equipe ao Vivo você sabe quem está ativo, atendendo ou em pausa, a que horas chegou e quanto já produziu, sem planilha de fim de dia. No Modo TV, o Dashboard vai para a TV e o escritório inteiro acompanha a meta junto.",
     bullets: ["Equipe ao Vivo: ativo, atendendo, em pausa", "Modo TV do Dashboard para o escritório", "Fluxo padronizado para toda a equipe"],
     cta: { label: "Quero ver ao vivo", message: "Olá, gostaria de conhecer o Equipe ao Vivo do eCorban." },
   },

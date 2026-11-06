@@ -95,7 +95,7 @@ export const modules: Module[] = [
     title: "Simulações bancárias",
     icon: CalculatorIcon,
     text: "Simule direto nos bancos integrados e mande para a esteira sem digitar tudo de novo.",
-    bullets: ["PAN, C6, Crefaz, Facta e QualiBanking", "“Enviar pra esteira” em um clique", "Compare condições sem sair do sistema"],
+    bullets: ["Bancos integrados no mesmo lugar", "“Enviar pra esteira” em um clique", "Compare condições sem sair do sistema"],
     highlight: { value: "5", label: "bancos integrados" },
   },
   {
