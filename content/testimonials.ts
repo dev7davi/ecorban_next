@@ -9,7 +9,7 @@ export const testimonials = [
   {
     empresa: "Conseg Cred",
     sigla: "CC",
-    logo: "/clientes/logo_consegcred.svg",
+    logo: "/clientes/conseg-cred.webp",
     quote: "Com a vinda do sistema conseguimos organizar toda a parte de contratos, financeiro, gerenciamento de comissões e extrato. O ponto fundamental foi a organização.",
     video: "/videos/conseg.mp4",
   },
